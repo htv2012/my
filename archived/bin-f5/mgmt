@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""
+Uses the Hub API to retrieve the mgmt IP of a DUT
+"""
+import argparse
+import ipaddress
+import json
+import sys
+import urllib.request
+
+
+def main():
+    """ Entry """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("dut_serial")
+    options = parser.parse_args()
+
+    # If the "serial" is really an IP address, return it
+    try:
+        address = ipaddress.ip_address(options.dut_serial)
+        print(options.dut_serial)
+        return 0
+    except ValueError:
+        pass
+
+    # Invokes the Hub API, see https://docs.f5net.com/x/X2aAGQ
+    response = urllib.request.urlopen(
+        f"http://spkapexsrvc01.olympus.f5net.com:44405/api/equipment/{options.dut_serial}"
+    )
+    info = json.load(response)
+
+    # Retrieve the mgmt IP
+    data = info.get("data") or {}
+    mgmt_ip = data.get("services", {}).get("network", {}).get("ip")
+    if mgmt_ip is None:
+        raise SystemExit(f"Invalid DUT serial number: {options.dut_serial}")
+
+    print(mgmt_ip)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+

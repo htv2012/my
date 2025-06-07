@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""
+Given a chassis, displays CCs and Blades in CSV format
+"""
+import argparse
+import itertools
+import subprocess
+
+
+def main():
+    """ Entry """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("chassis")
+    options = parser.parse_args()
+
+    output = subprocess.check_output(["equipment", options.chassis], encoding='utf-8')
+    lines = iter(output.splitlines())
+    controllers = []
+    blades = []
+
+    lines = itertools.dropwhile(lambda line: 'controllers:' not in line, lines)
+    for line in itertools.takewhile(lambda line: 'blades:' not in line, lines):
+        if 'serialNumber:' in line:
+            tokens = line.split()
+            controllers.append(tokens[-1])
+    print("CCS:     ", ",".join(controllers))
+
+    for line in lines:
+        if 'serialNumber:' in line:
+            tokens = line.split()
+            blades.append(tokens[-1])
+
+    print("Blades:  ", ",".join(blades))
+
+if __name__ == '__main__':
+    main()

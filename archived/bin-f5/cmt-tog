@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# ======================================================================
+#
+# This script will toggle between the pip (official) version of
+# syzygy-common-test and the dev version
+#
+# Usage:
+#     cmt-tog
+#
+# ======================================================================
+
+# Determine the site-packages dir.
+# Typically test-env/lib/python3.7/site-packages
+SITE_PACKAGES_DIR=$(find test-env -type d -name site-packages)
+echo Site package dir: $SITE_PACKAGE_DIR
+cd $SITE_PACKAGES_DIR
+
+DEV_DIR=/syzygy/development/$USER/syzygy-workspace/syzygy-common-test/src/syzygy_common_test
+
+if [[ -e syzygy_common_test.original ]]
+then
+    echo Switching to the pip version of syzygy-common-test
+    rm syzygy_common_test
+    mv syzygy_common_test.original syzygy_common_test
+else
+    echo Switching to dev version of syzygy-common-test
+    mv syzygy_common_test syzygy_common_test.original
+    ln -s $DEV_DIR syzygy_common_test
+fi
+
+ls -hld syzygy_common_test*

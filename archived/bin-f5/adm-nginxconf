@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#whatis: View nginx.conf from data-1, ...
+
+# Ensure stackId is set
+if [[ -z $stackId ]]
+then
+    echo Expect environment variable stackId, but not found
+    exit 1
+fi
+
+# Download and view nginx.conf $1: host (default=data-1)
+cfg=~/.testenv/${stackId}/ssh.cfg
+idFile=~/.testenv/$stackId/id_ed25519_testenv
+remoteHost=${1:-data-1}
+dest=/tmp/${remoteHost}-nginx.conf
+if scp -F "$cfg" -i "$idFile" "$remoteHost:/etc/nginx/nginx.conf" "$dest"
+then
+    vim -R "$dest"
+fi

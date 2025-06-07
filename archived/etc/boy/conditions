@@ -1,0 +1,31 @@
+# syzygy.runtime.conditions
+
+| Condition                                                               | Description                           |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsEqual(expected, actual)                                               | expected == actual                    |
+| IsNotEqual(expected, actual)                                            | expected != actual                    |
+| IsAllEqual(iterable)                                                    | All elements are equals to each other |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsLessThan(left, right)                                                 | left < right                          |
+| IsLessThanOrEqual(left, right)                                          | left <= right                         |
+| IsGreaterThan(left, right)                                              | left > right                          |
+| IsGreaterThanOrEqual(left, right)                                       | left >= right                         |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsWithin(value, reference, delta, percent, check_upper, check_lower)    | Floating point comparison             |
+| IsNotWithin(value, reference, delta, percent, check_upper, check_lower) | Ditto                                 |
+| IsBetween(value, lower, upper, inclusive, include_lower, include_upper) | Range check                           |
+| IsLength(items, length)                                                 | len(items) == length                  |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsIn(item, items)                                                       | item in items                         |
+| IsNotIn(item, items)                                                    | item not in items                     |
+| IsSubset(items, other)                                                  | set(items) <= set(other)              |
+| IsEmpty(value)                                                          | len(value) == 0                       |
+| IsNotEmpty(value)                                                       | len(value) != 0                       |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsNone(value)                                                           | value is None                         |
+| IsNotNone(value)                                                        | value is not None                     |
+|-------------------------------------------------------------------------|---------------------------------------|
+| IsTrue(value)                                                           | bool(value) is True                   |
+| IsFalse(value)                                                          | bool(value) is False                  |
+| IsInstance(value, value_type)                                           | isinstance(value, value_type)         |
+

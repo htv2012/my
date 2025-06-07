@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Source a virtualenv and run ctrlsh.py
+source ~/.virtualenv/nginx_api/bin/activate
+ctrlsh.py "$@"
+

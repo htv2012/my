@@ -1,0 +1,194 @@
+#!/usr/bin/env python3
+"""
+NAME
+
+    hb - Uploads data to a hastebin server
+
+SYNOPSYS
+
+    hb [OPTION]... [FILE]...
+
+DESCRIPTION
+
+    When invoked without any file name, hb will reads from standard
+    input. If the caller supplies the file names, each of them will be
+    uploaded separately. Upon completion, hb will print to the standard
+    output the URL for each upload.
+
+    -h, --help
+        Displays help and exit
+
+CONFIGURATION
+
+    By default, hb will upload to http://localhost:7777. If you
+    want to upload to a different server, there are three ways to
+    configure it.
+
+    The first is to create a configuration file in the same directory
+    of the script and name it `hb.json`. In a multiple-user
+    environment, this configuration is meant to be global to all
+    the users.
+
+    The second is to create a per-user configuration file in
+    `~/.config/hb.json`.
+
+    Below is an example of such configuration file:
+
+        {
+            "HASTE_SERVER": "http://my-hastebin.com"
+        }
+
+    The third is to use an environment variable. Here is an example
+    for the bash shell:
+
+        export HASTE_SERVER=http://my-hastebin.com
+
+    Below is the order of look-up to find the server, with the
+    environment variable having the highest precedence:
+
+        1. The environment variable
+        2. The global configuration file
+        3. The per-user configuration file
+        4. If all failed, use http://localhost:7777
+
+LOG
+
+    hb keeps a log of all the URLs in ~/.hb.log
+
+AUTHOR
+
+    Written by Hai Vu (haivu2004 at gmail dot com)
+
+"""
+import collections
+import json
+import logging
+import os
+import pathlib
+import sys
+import urllib.request
+
+
+logging.basicConfig(level=os.getenv('LOGLEVEL', 'WARN'))
+LOGGER = logging.getLogger(__name__)
+
+CONFIG = {
+    'HASTE_SERVER': 'http://localhost:7777'
+}
+
+
+def read_config_file(path):
+    """
+    Reads the user configuration from `path` and returns a dictionary.
+    If the configuration file is not found, returns an empty
+    dictionary.
+    """
+    try:
+        with open(path, encoding='utf-8') as file_handle:
+            config = json.load(file_handle)
+    except FileNotFoundError:
+        config = dict()
+
+    return config
+
+
+def get_server_url():
+    """
+    Returns the server URL in the following search order. See the
+    document above for search order.
+    """
+    user_config_path = pathlib.Path('~/.config/hb.json').expanduser()
+    user_config = read_config_file(user_config_path)
+    global_config_path = pathlib.Path(__file__).with_name('hb.json')
+    global_config = read_config_file(global_config_path)
+
+    all_configs = collections.ChainMap(
+        os.environ,
+        user_config,
+        global_config,
+        CONFIG)
+
+    server_url = all_configs['HASTE_SERVER']
+    if server_url.endswith('/'):
+        server_url = server_url.rstrip('/')
+    LOGGER.debug('Server URL: %s', server_url)
+    return server_url
+
+
+def truncate(text):
+    """
+    given some text, truncate it to a certain size for display and
+    replace all the new lines with spaces
+    """
+    return text[:40].replace('\n', ' ')
+
+
+def upload(url, data):
+    """
+    Upload the data to the hastebin server. The `url` parameter indicates the
+    server's URL, e.g. 'https://hastebin.com'. The `data` parameter can either
+    be a string, a bytes stream, or a file-like object serving raw bytes. Upon
+    completion, the function returns a dictionary in which the key `key` will
+    provide the token for locating the paste, e.g. `{"key": "xyz"}`. The caller
+    can combine the server url with this key to create the full URL for
+    accessing the paste, e.g. https://hastebin.com/xyz.
+    """
+
+    url = f'{url}/documents'
+    if isinstance(data, str):
+        data = data.encode('utf-8')
+
+    request = urllib.request.Request(url, data)
+    with urllib.request.urlopen(request) as response:
+        output = json.load(response)
+        return output
+
+
+def upload_wrapper(url, filename=None):
+    """
+    Uploads a file and perform other administrative tasks
+    """
+    if filename is None:
+        data = sys.stdin.read()
+        preview = truncate(data)
+    else:
+        data = open(filename, 'rb')
+        preview = truncate(data.read(40).decode('utf-8'))
+        data.seek(0)
+
+    output = upload(url, data)
+    output_url = f'{url}/{output["key"]}'
+
+    log_file = pathlib.Path('~/.hb.log').expanduser()
+    with open(log_file, 'a', encoding='utf-8') as file_handle:
+        if filename is None:
+            filename = 'stdin'
+        output = f'{filename} - {output_url} - {preview}'
+        print(output_url)
+        file_handle.write(output)
+        file_handle.write('\n')
+
+
+def show_usage():
+    """
+    Show the usage
+    """
+    print(__doc__)
+
+
+def main():
+    """ Entry """
+    server_url = get_server_url()
+    if len(sys.argv) > 1:
+        if sys.argv[1] in {'-h', '--help'}:
+            show_usage()
+            return
+
+        for filename in sys.argv[1:]:
+            upload_wrapper(server_url, filename)
+    else:
+        upload_wrapper(server_url)
+
+
+if __name__ == '__main__':
+    main()

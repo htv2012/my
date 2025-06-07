@@ -1,0 +1,20 @@
+#!/bin/sh
+# Search for a package using dnf, apt, or brew
+
+if is_darwin
+then
+    PKG=brew
+elif [ -f "/etc/os-release" ]
+then
+    . /etc/os-release
+    if [ "$ID" = fedora ] || [[ "$ID_LIKE" = *rhel* ]]
+    then
+        PKG=dnf
+    elif [ "$ID" = debian ] || [[ "$ID_LIKE" = *debian* ]]
+    then
+        pkg=aft
+    fi
+fi
+
+$PKG search "$1" | grep "^${1}\." || $PKG search "$1"
+

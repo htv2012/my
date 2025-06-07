@@ -1,0 +1,15 @@
+#!/bin/bash
+INBOX="$HOME/Library/Mobile Documents/iCloud~com~agiletortoise~Drafts5/Documents/Inbox"
+
+# Displays the Inbox if no arguments
+if [[ -z $1 ]]
+then
+    tree "$INBOX"
+    exit
+fi
+
+# Copy each file to inbox
+for FILE_NAME
+do
+    cp "$FILE_NAME" "$INBOX"
+done

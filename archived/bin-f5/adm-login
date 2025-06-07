@@ -1,0 +1,5 @@
+#!/bin/sh
+#whatis: Log into Azure and AWS
+
+aws sso login --profile dev-sandbox &
+az login && az acr login

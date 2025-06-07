@@ -1,0 +1,442 @@
+#!/usr/bin/env python3
+"""
+Show Equipment Information, invoke with -h for help with usage
+
+Sample Usage:
+
+    equipment bld424329s
+    equipment chs600126s chs600132s 10.238.150.152
+
+Author: Hai Vu
+"""
+import argparse
+import base64
+import contextlib
+import io
+import ipaddress
+import json
+import logging
+import ssl
+import urllib.error
+import urllib.request
+
+import paramiko
+
+
+HUB_API_ROOT = "http://spkapexsrvc01.olympus.f5net.com:44405/api/equipment/"
+logging.getLogger("paramiko").setLevel(logging.CRITICAL)
+
+
+def _get(url, creds):
+    """GET the resources, with caching"""
+    auth = base64.encodebytes(":".join(creds).encode("utf-8")).decode("utf-8").rstrip()
+    headers = {
+        "Accept": "application/yang-data+json",
+        "Authorization": f"Basic {auth}",
+    }
+    request = urllib.request.Request(url, headers=headers)
+
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    try:
+        response = urllib.request.urlopen(request, context=ctx)
+        return response
+    except urllib.error.HTTPError as error:
+        print(f"{error.code} {error.reason}")
+        return None
+
+
+def get_tenants(partition_ip, credentials=None):
+    """
+    Find the tenants hosted in this partition
+
+    :param partition_ip: The partition IP
+    :return: A list of tenants
+    """
+    if credentials is None:
+        credentials = ("admin", "ess-pwe-f5site02")
+
+    url = f"https://{partition_ip}:8888/restconf/data/f5-tenants:tenants"
+    response = _get(url, credentials)
+
+    contents = response.read()
+    if not contents:
+        return []
+
+    tenants = json.loads(contents)
+    tenants = next(iter(tenants.values()))
+    return tenants["tenant"]
+
+
+def is_ip_address(host: str) -> bool:
+    """
+    A predicate to test if a string is an IP address
+
+    :param host: A host name of IP address
+    :return: True if it is an IP address, False otherwise
+    """
+    try:
+        ipaddress.ip_address(host)
+        return True
+    except ValueError:
+        return False
+
+
+def value_search(json_object, target, path_so_far=None, default=None):
+    """
+    Given a nested JSON object, search for a value and return the path
+    to that value.
+
+    Example:
+
+        >>> value_search({"phone": {"home": "333-4455", "mobile": "999-8888"}}, "333-4455")
+        ['phone', 'home']
+
+        >>> value_search({"phone": {"home": "333-4455", "mobile": "999-8888"}}, "999-8888")
+        ['phone', 'mobile']
+
+        >>> value_search(
+            {
+                "email": [
+                    "foo@bar.com",
+                    "hello@world.com",
+                    "ithink@iam.com",
+                ]
+            },
+            "hello@world.com"
+        )
+        ['email', 1]
+
+    :return: A list of indices into the JSON object
+    """
+    path_so_far = path_so_far or []
+    if json_object == target:
+        return path_so_far
+
+    if isinstance(json_object, list):
+        for index, sub_json_object in enumerate(json_object):
+            path_found = value_search(
+                sub_json_object, target, path_so_far + [index], default
+            )
+            if path_found:
+                return path_found
+
+    if isinstance(json_object, dict):
+        for key, value in json_object.items():
+            path_found = value_search(value, target, path_so_far + [key], default)
+            if path_found:
+                return path_found
+
+    return default
+
+
+def look_up_serial(ip_address: str) -> str:
+    """
+    Given an IP address, look up the hub to find the serial number
+
+    :param ip_address: The IP address
+    :return: The serial number, e.g. "f5-xyzd-abcd" or None if not found
+    """
+    with urllib.request.urlopen(HUB_API_ROOT) as response:
+        data = json.load(response)
+    data = data["data"]
+    path = value_search(data, ip_address)
+
+    if path:
+        serial = data[path[0]]["serialNumber"]
+        return serial
+
+    return None
+
+
+def get_info(equipment_name):
+    """
+    Gets the equipment information using the HUB 2.0 API
+
+    :param equipment_name: The name (serial number) of the equipment
+    :return: A dictionary representing the equipment
+    """
+    url = HUB_API_ROOT + equipment_name
+    try:
+        with urllib.request.urlopen(url) as response:
+            data = json.load(response)
+    except urllib.error.URLError:
+        raise SystemExit(f"Failed to get {url}\nHub API error, is the hub up and running?")
+    return data["data"]
+
+
+def print_indent(text, indent: int):
+    """
+    Prints a text with indentation
+
+    :param text: Any object
+    :param indent: The number of columns to indent
+    """
+    print(" " * indent, end="")
+    print(text)
+
+
+def get_dict_path(dict_object, key_path):
+    """
+    Given a nested dictionary object and a path to the leaf key, return
+    the value
+
+    :param dict_object: The nested dictionary
+    :param key_path: The path to the leaf key, each key separated by a
+        dot, e.g. config.type
+    :return: The value or an empty string if not found
+    """
+    for key in key_path.split("."):
+        dict_object = dict_object.get(key, {})
+    return dict_object or ""
+
+
+def print_key(dict_object, key_path, indent, first=False):
+    """
+    Prints they value of the leaf key taken from a dictionary. The
+    `first` parameter indicates that this is a first element of a list,
+    thus prefixed by a dash
+
+    :param dict_object: The nested dictionary
+    :param key_path: The path to the leaf key, each key separated by a
+        dot, e.g. config.type
+    :param indent: The number of columns to indent
+    :param first: A boolean indicate this value is the first in a list
+    """
+    prefix = "- " if first else "  "
+    label = key_path
+    value = get_dict_path(dict_object, key_path)
+    if value:
+        print_indent(f"{prefix}{label}: {value}", indent)
+
+
+def get_partitions(mgmt_ip):
+    """
+    Find the partitions given the IP address of a controller
+
+    :param ip: The IP address of the controller, e.g. 10.4.1.16
+    :return: A list of partitions, each is a dict
+    """
+    credentials = ("admin", "admin")
+    url = (
+        f"https://{mgmt_ip}:8888/restconf/data/f5-system-partition:partitions/partition"
+    )
+    try:
+        response = _get(url, creds=credentials)
+    except (urllib.error.URLError, ConnectionResetError):
+        return []
+    if response.getcode() != 200:
+        return []
+
+    partitions = json.load(response)
+    partitions = next(iter(partitions.values()))
+    return partitions
+
+
+def show_partition(partition, indent):
+    """
+    Given a list of partitions, display them
+
+    :param partition: A partition
+    :param indent: The number of columns to indent
+    """
+
+    print_key(partition, "name", indent, first=True)
+    print_key(partition, "config.enabled", indent)
+    print_key(partition, "config.mgmt-ip.ipv4.address", indent)
+    print_key(partition, "config.mgmt-ip.ipv4.gateway", indent)
+    print_key(partition, "config.os-version", indent)
+    print_key(partition, "config.service-version", indent)
+    print_key(partition, "state.id", indent)
+    print_key(partition, "state.install-status", indent)
+    print_key(partition, "state.os-version", indent)
+    print_key(partition, "state.service-version", indent)
+
+    mgmt_ip = get_dict_path(partition, "config.mgmt-ip.ipv4.address")
+    if not mgmt_ip:
+        return
+
+    tenants = get_tenants(mgmt_ip)
+    show_tenants(tenants, indent)
+
+
+def show_tenant(tenant, indent):
+    """
+    Show a tenant's information
+
+    :param tenant: The tenant object
+    :param indent: The number of columns to indent
+    """
+    print_key(tenant, "name", indent, first=True)
+    print_key(tenant, "config.type", indent)
+    print_key(tenant, "config.serviceIP", indent)
+    print_key(tenant, "config.port", indent)
+    print_key(tenant, "config.image", indent)
+    print_key(tenant, "config.vlans", indent)
+    print_key(tenant, "state.mgmt-ip", indent)
+    print_key(tenant, "state.running-state", indent)
+    print_key(tenant, "state.status", indent)
+
+
+def show_tenants(tenants, indent):
+    if tenants:
+        print_indent("  Tenants:", indent)
+
+    for tenant in tenants:
+        show_tenant(tenant, indent + 4)
+
+
+def show_equipment(equipment_name, output_format, indent=0):
+    """
+    Given an equipment name (serial number), shows some essential information
+
+    :param equipment_name: The name (serial number) of the equipment
+    :param indent: The number of columns to indent
+    """
+    if equipment_name is None:
+        return
+
+    data = get_info(equipment_name)
+    if data is None:
+        print_indent(f"{equipment_name}: not found", indent)
+        return
+
+    if output_format == "json":
+        print(json.dumps(data, indent=2, sort_keys=True))
+        return
+
+    print_key(data, "serialNumber", indent, first=True)
+    print_key(data, "kind", indent)
+
+    if data["kind"] == "chassis":
+        print_key(data, "services.network.ip", indent)
+        ref = data["services"]["hub_references"]["ref"]
+
+        print_indent("  controllers:", indent)
+        for controller in ref["cc"]:
+            equipment = controller["serialNumber"]
+            show_equipment(equipment, output_format, indent + 4)
+
+        print_indent("  blades:", indent)
+        for blade in ref["blades"]:
+            equipment = blade["serialNumber"]
+            show_equipment(equipment, output_format, indent + 4)
+
+        mgmt_ip = get_dict_path(data, "services.network.ip")
+        partitions = get_partitions(mgmt_ip)
+        if partitions:
+            print_indent("  Partitions:", 0)
+        for partition in partitions:
+            show_partition(partition, indent=4)
+
+    elif data["kind"] == "appliance":
+        print_key(data, "services.console.host", indent)
+        print_key(data, "services.console.port", indent)
+        print_key(data, "services.network.ip", indent)
+        print_key(data, "services.platform.family", indent)
+        print_key(data, "services.platform.variantDesc", indent)
+
+        network_ip = get_dict_path(data, "services.network.ip")
+        tenants = get_tenants(network_ip)
+        show_tenants(tenants, indent)
+    else:
+        print_key(data, "services.network.ip", indent)
+
+    labels = get_dict_path(data, "services.labels")
+    show_labels(labels, indent + 4)
+
+
+def show_labels(labels: dict, indent: int):
+    if labels is None:
+        return
+
+    print_indent("  services.labels:", indent - 4)
+    for key in sorted(labels):
+        print_key(labels, key, indent)
+
+
+def get_mgmt(dut_serial):
+    """ Given a serial, returns mgmt IP """
+    response = urllib.request.urlopen(
+        f"http://spkapexsrvc01.olympus.f5net.com:44405/api/equipment/{dut_serial}"
+    )
+    info = json.load(response)
+
+    # Retrieve the mgmt IP
+    mgmt_ip = info.get("data", {}).get("services", {}).get("network", {}).get("ip")
+    if mgmt_ip is None:
+        raise SystemExit(f"Invalid DUT serial number: {dut_serial}")
+
+    return mgmt_ip
+
+
+def crack(mgmt_ip):
+    """ Guesses the password for the admin user """
+    known_passwords = ["ess-pwe-f5site02", "admin", "default", "f5site02", "f5site03", "ess-pwe-f5site03"]
+    for password in known_passwords:
+        url = f"https://{mgmt_ip}:8888/restconf/data/openconfig-system:system/openconfig-system:aaa/authentication/f5-system-aaa:users/user=admin"
+        response = _get(url, ("admin", password))
+        if 200 <= response.getcode() < 300:
+            return password
+
+    return "unknown"
+
+
+def main():
+    """Entry"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-o",
+        "--output-format",
+        dest="output_format",
+        default="text",
+        choices=["text", "json"],
+    )
+    parser.add_argument("equipments", nargs="+")
+    options = parser.parse_args()
+
+    print("Hub and Tenant Information:")
+    print("---------------------------")
+    for equipment_name in options.equipments:
+        if is_ip_address(equipment_name):
+            ip_address = equipment_name
+            equipment_name = look_up_serial(ip_address)
+            if equipment_name is None:
+                print(f"- {ip_address}: Cannot look up serial number")
+                continue
+        show_equipment(equipment_name, options.output_format)
+
+        # Get /etc/*, password
+        mgmt_ip = get_mgmt(equipment_name)
+        with contextlib.redirect_stderr(io.StringIO()):
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(mgmt_ip, 22, "root", "default")
+
+            with ssh, ssh.open_sftp() as sftp:
+                with sftp.open("/etc/PRODUCT") as stream:
+                    etc_product = stream.read().decode("utf-8")
+                with sftp.open("/etc/PLATFORM") as stream:
+                    etc_platform = stream.read().decode("utf-8")
+
+        print()
+        print("/etc/PRODUCT:")
+        print("-------------")
+        print(etc_product)
+
+        print()
+        print("/etc/PLATFORM:")
+        print("--------------")
+        print(etc_platform)
+
+        print()
+        print("User 'admin' Password:")
+        print("----------------------")
+        password = crack(mgmt_ip)
+        print(password)
+
+
+if __name__ == "__main__":
+    main()

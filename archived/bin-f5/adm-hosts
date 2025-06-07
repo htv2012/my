@@ -1,0 +1,3 @@
+#!/bin/sh
+#whatis: Shows the hosts which we can ssh into
+awk -v target="$1" '/^Host/ && $2 ~ target { print $2 }' "$HOME/.testenv/$stackId/ssh.cfg"

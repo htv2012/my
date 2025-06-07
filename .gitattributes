@@ -1,0 +1,5 @@
+* text=lf
+
+*.sh text eol=lf
+*.py text eol=lf
+vimrc text eol=lf

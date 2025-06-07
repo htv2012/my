@@ -1,0 +1,9 @@
+script:
+  type: str
+  default: main.py
+  help: Script name (see pyproject.toml)
+
+default_target:
+  default: test
+  help: Default target (e.g. run, test, or both)
+

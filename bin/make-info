@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""Show Makefile Information."""
+
+import atexit
+import os
+import re
+import subprocess
+import tempfile
+
+
+def show_dependency(makefile_path: str):
+    """Show the targets and dependencies.
+
+    :param makefile: The path to the Makefile
+    """
+    print("\n#\n# Targets and Dependencies\n#")
+    pattern = re.compile(r"^\w+:[^:]+$")
+    with open(makefile_path, "r", encoding="utf-8") as stream:
+        targets = sorted(line for line in stream if pattern.match(line))
+    print("".join(targets))
+
+
+def show_vars(makefile_path):
+    """Show variables and values."""
+    with open(makefile_path, "r", encoding="utf-8") as stream:
+        contents = stream.read()
+    var_names = re.findall(r"^(\w+)\s+[:?]*=", contents, re.MULTILINE)
+    if not var_names:
+        return
+
+    print("\n#\n# Vars\n#")
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as file:
+        atexit.register(os.unlink, file.name)
+        file.write(".PHONY: debug\n")
+        file.write("include Makefile\n")
+        file.write("debug:\n")
+        for name in sorted(var_names):
+            file.write(f"\t@echo {name}=$({name})\n")
+
+    subprocess.run(["make", "-f", file.name, "debug"])
+
+
+def main():
+    """Entry"""
+    show_dependency("Makefile")
+    show_vars("Makefile")
+
+
+if __name__ == "__main__":
+    main()

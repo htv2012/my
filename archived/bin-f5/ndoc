@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+import argparse
+import csv
+import os
+import pathlib
+import subprocess
+
+
+def expand_topic(topic: str, lookup: dict):
+    for search_term, replacement in lookup.items():
+        topic = topic.replace(search_term, replacement)
+    return topic
+
+
+def main():
+    """Entry"""
+    # Get the path to config file
+    config_path = pathlib.Path("~/.config/ndoc.conf").expanduser()
+    try:
+        with open(config_path, "r", encoding="utf-8") as stream:
+            config = dict(
+                key_value
+                for key_value in csv.reader(stream, delimiter="=")
+            )
+    except FileNotFoundError:
+        config = {}
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("topic", nargs="?")
+    parser.add_argument("-e", "--edit-config", action="store_true")
+    options = parser.parse_args()
+
+    if options.edit_config:
+        editor = os.getenv("EDITOR", "vim")
+        subprocess.run([editor, str(config_path)])
+        return
+
+    if options.topic is None:
+        print("List of topics:")
+        for key, value in config.items():
+            print(f"{key}: {value}")
+        print(f"Config path: {config_path}")
+        return
+
+    topic = options.topic
+    if "=" in topic:
+        key, value = [token.strip() for token in options.topic.split("=")]
+        config[key] = value
+        with open(config_path, "w", encoding="utf-8") as stream:
+            writer = csv.writer(stream, delimiter="=")
+            writer.writerows(sorted(config.items(), key=lambda kv: kv[0].casefold()))
+        topic = key
+
+    topic = expand_topic(topic, config)
+    cmd = ["python", "-m", "pydoc", topic]
+    subprocess.run(cmd)
+
+
+if __name__ == "__main__":
+    main()

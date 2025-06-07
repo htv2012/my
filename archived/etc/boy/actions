@@ -1,0 +1,30 @@
+# syzygy.runtime.actions
+
+from syzygy.runtime import actions
+
+# Sleep for N seconds         |
+actions.Sleep.seconds(context, delay, interval=None, display=False)
+
+# milliseconds
+actions.Sleep.milliseconds(context, delay)
+
+# Like sleep, with status
+actions.Wait.seconds(context, wait_time, display_interval=10, callback=None)
+
+# Stops the test
+actions.Stop.generate(context, message, *args, **kw)
+
+# Stops based on a condition
+actions.Stop.condition(context, condition, message, *args, **kw)
+
+# Abort all tests
+actions.Abort.generate(context, message, *args, **kw)
+
+# Abort based on a condition
+actions.Abort.condition(context, condition, message, *args, **kw)
+
+# Pauses the test
+actions.Pause.generate(context, message, *args, timeout=30.0, **kw)
+
+# Pauses based on a condition
+actions.Pause.condition(context, condition, message, *args, timeout=30.0, **kw)

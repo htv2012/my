@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+function _usage() {
+    echo 'nssh - nginx ssh script'
+    echo '  Usage: nssh remoteHost [ stackId ]'
+    echo '  remoteHost is ctrl-1, nfs, data-1, or workload-1'
+    echo '  stackId could be set as an environment variable:'
+    echo '    export stackId=<value>'
+    echo ''
+}
+
+remoteHost=$1
+stackId=${2:-$stackId}
+if [[ -z $1 ]]
+then
+    _usage
+    exit 1
+fi
+if [[ -z $stackId ]]
+then
+    _usage
+    echo 'Stack ID is missing'
+    exit 1
+fi
+
+cfg=~/.testenv/${stackId}/ssh.cfg 
+idFile=~/.testenv/$stackId/id_ed25519_testenv 
+ssh -F $cfg -i $idFile $remoteHost
+

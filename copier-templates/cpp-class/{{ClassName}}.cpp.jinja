@@ -1,0 +1,25 @@
+#include "{{ClassName}}.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+
+const std::string UNKNOWN_NAME = "unknown";
+
+{{{ClassName}}{ClassName}}(): name(UNKNOWN_NAME)
+{
+}
+
+{{ClassName}}{{ClassName}}(const std::string &newName): name(newName)
+{
+}
+
+std::string {{ClassName}}::getName()
+{
+    return name;
+}
+
+void {{ClassName}}::setName(const std::string &newName)
+{
+    this->name = newName;
+}
+

@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+import subprocess
+import logging
+import os
+
+logging.basicConfig(level=os.getenv("LOGLEVEL", "WARN"))
+
+completed_process = subprocess.run(['pbpaste'], text=True, stdout=subprocess.PIPE)
+line = completed_process.stdout
+logging.debug("line=%r", line)
+
+tokens = line.split()
+logging.debug("tokens=%r", tokens)
+tokens[0] = tokens[0].removesuffix(".").rjust(4, "0")
+out = "_".join(tokens)
+out = out.lower()
+
+subprocess.run(['pbcopy'], text=True, input=out)

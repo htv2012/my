@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#whatis: Create a password entry for user $1
+
+venvDir=$HOME/.virtualenv/paramiko
+
+if [[ ! -d $venvDir ]]
+then
+    python3 -m venv $venvDir
+    source $venvDir/bin/activate
+    pip install --upgrade pip
+    pip install paramiko
+else
+    source $venvDir/bin/activate
+fi
+
+adm_passwd.py "$@"

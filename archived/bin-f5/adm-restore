@@ -1,0 +1,16 @@
+#!/bin/bash
+#whatis: Restore ADM from a previous back up
+
+{
+    echo "# Stop NMS service"
+    adm ssh ctrl-1 'sudo systemctl stop nms'
+
+    backupFile=$(adm ssh ctrl-1 'ls /tmp/nms-backup-*.tgz | head -1')
+    echo "# Restore from $backupFile"
+    adm ssh ctrl-1 "cd /etc/nms/scripts; yes y | sudo bash ./restore.sh $backupFile"
+
+    echo "# Start NMS service"
+    adm ssh ctrl-1 'sudo systemctl start nms'
+
+    echo "# Restore finished"
+} | grep "^# "

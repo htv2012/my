@@ -1,0 +1,22 @@
+{
+    "doc": "https://packagecontrol.io/packages/AdvancedNewFile",
+
+    "completion_type": "nix",
+    "ignore_case": true,
+    "show_files": true,
+    "show_path": true,
+
+    "os_specific_alias": {
+        "subl": {
+            "linux": "~/.config/sublime-text-3/Packages/User",
+            "osx": "~/Library/Application Support/Sublime Text 3/Packages/User"
+        },
+    },
+
+    "alias": {
+        "bin": "~/myenv/bin",
+        "etc": "~/myenv/etc",
+        "myenv": "~/myenv",
+        "ws": "~/SynologyDrive/src/workspaces"
+    }
+}

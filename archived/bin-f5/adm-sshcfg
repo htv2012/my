@@ -1,0 +1,4 @@
+#!/bin/sh
+#whatis: Shows ssh.cfg for the current stack
+
+cat "$HOME/.testenv/$stackId/ssh.cfg"

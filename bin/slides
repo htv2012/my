@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""
+Show the slides in a text file, each slide is separated by '---'.
+"""
+import argparse
+import curses
+import itertools
+
+
+def parse_slides(filename: str) -> list[str]:
+    """Parse a file's contents into slides."""
+    with open(filename) as stream:
+        contents = stream.read()
+    slides = [slide.strip() for slide in contents.split("---")]
+    return slides
+
+
+def show_slide(window: curses.window, slides: list[str], index: int):
+    """Show a single slide."""
+    window.clear()
+    lines = slides[index].splitlines()
+    attributes = itertools.chain([curses.A_BOLD], itertools.repeat(curses.A_NORMAL))
+
+    for row, text in enumerate(lines, 3):
+        window.addstr(row, 5, text, next(attributes))
+
+    # Show the slide number: index=0 means slide #1
+    total = len(slides)
+    last_row, last_col = window.getmaxyx()
+    position = f"{index + 1}/{total}"
+    window.addstr(last_row - 1, last_col - 1 - len(position), position)
+
+
+def show_slides(window: curses.window, slides: list[str]):
+    """Parse a file into individual slides and show."""
+    curses.curs_set(0)  # Hide the cursor
+
+    # Show the slides
+    current = 0
+    LAST_SLIDE_NUMBER = len(slides) - 1
+    while True:
+        show_slide(window, slides, current)
+        key = window.getkey()
+        if key in {"b", "k", "KEY_LEFT"}:
+            current = max(current - 1, 0)
+        elif key == "KEY_HOME":
+            current = 0
+        elif key == "q":
+            break
+        else:
+            current += 1
+        if current > LAST_SLIDE_NUMBER:
+            break
+
+
+def main():
+    """Entry."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename")
+    options = parser.parse_args()
+
+    slides = parse_slides(options.filename)
+    curses.wrapper(show_slides, slides)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,34 @@
+[core]
+    pager = delta
+
+[color]
+    ui = auto
+
+[delta]
+    line-numbers = true
+    navigate = true    # use n and N to move between diff sections
+    side-by-side = false
+
+    # delta detects terminal colors automatically; set one of these to disable auto-detection
+    # dark = true
+    # light = true
+
+[diff]
+    colorMoved = default
+
+[interactive]
+    diffFilter = delta --color-only
+
+[merge]
+    conflictstyle = diff3
+
+[pull]
+	rebase = true
+
+[push]
+    default = simple
+
+[user]
+	email = haivu2004@gmail.com
+	name = Hai Vu
+

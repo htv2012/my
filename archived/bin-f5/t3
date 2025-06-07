@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+""" Runs A systest-common test """
+import argparse
+import atexit
+import contextlib
+import datetime
+import os
+import shlex
+import subprocess
+
+
+def print_message(message):
+    """Prints a message to the console as well as speaking it."""
+    print(message)
+    subprocess.run(["say", message], check=False)
+
+
+def report_timing(start_time):
+    """Report the timing of the run."""
+    end_time = datetime.datetime.now()
+    duration = end_time - start_time
+
+    minutes, seconds = divmod(duration.seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+
+    msg = f"Finished in {hours} hours, {minutes} minutes, {seconds} seconds"
+    msg = msg.replace(" 0 hours,", "").replace(" 0 minutes,", "")
+    print_message(msg)
+
+
+@contextlib.contextmanager
+def add_debug_package(requirements_path, debug_flag, *packages):
+    """Add debugging to requirements.txt if needed."""
+    if debug_flag:
+        with open(requirements_path, encoding="utf-8") as stream:
+            original_text = stream.read()
+
+        with open(requirements_path, "a", encoding="utf-8") as stream:
+            packages = "\n".join(packages)
+            stream.write(f"\n{packages}\n")
+
+    yield
+
+    if debug_flag:
+        with open(requirements_path, "w", encoding="utf-8") as stream:
+            stream.write(original_text)
+
+
+def main():
+    """
+    Format, lint, and run a test.
+
+    Example: `t tests/integration/gateways/configs/container/test_multiple_gateways.py`
+        In the above, "integration is the make target, and gateway/... is the path to test
+    """
+    default_script = os.getenv("TESTRUN_SCRIPT")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--format", action="store_true", default=False)
+    parser.add_argument("-l", "--lint", action="store_true", default=False)
+    parser.add_argument("path", nargs="?", default=default_script)
+    options = parser.parse_args()
+
+    if not os.path.exists(options.path):
+        raise SystemExit(f"Test does not exist: {options.path}")
+
+    start_time = datetime.datetime.now()
+    atexit.register(report_timing, start_time)
+
+    if options.format:
+        completed_process = subprocess.run(["make", "format"], check=False)
+        if completed_process.returncode != 0:
+            print_message("Format failed")
+            raise SystemExit()
+        print_message("format done")
+
+    if options.lint:
+        completed_process = subprocess.run(["make", "lint"], check=False)
+        if completed_process.returncode != 0:
+            print_message("lint failed")
+            raise SystemExit()
+        print_message("lint passed")
+
+    parts = options.path.split("/")
+    assert parts[0] == "tests"
+    make_target = parts[1]
+    path_to_test = "/".join(parts[2:])
+
+    # Determine if pudb used, then turn on debugging
+    debug_packages = ["pudb", "pysnooper"]
+    with open(options.path, encoding="utf-8") as stream:
+        contents = stream.read()
+        if any(f"import {package}" in contents for package in debug_packages):
+            debug_flag = "--debug "
+        else:
+            debug_flag = ""
+
+    make_args = shlex.quote(f"{debug_flag}{path_to_test}")
+    command = ["make", make_target, f"args={make_args}"]
+    command = " ".join(command)
+    print(command)
+
+    with add_debug_package("requirements.txt", debug_flag, *debug_packages):
+        completed_process = subprocess.run(command, shell=True, check=False)
+
+    if completed_process.returncode != 0:
+        print_message("test failed")
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()

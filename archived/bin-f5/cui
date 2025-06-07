@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+VENDIR=~/.virtualenv/selenium
+source $VENDIR/bin/activate
+python $MYENV/bin-f5/ctrl_login.py "$@"

@@ -1,0 +1,17 @@
+#!/bin/bash
+# Script to provision an appliance
+
+if [[ -n $1 ]]
+then
+    DUT=$1
+    shift
+else
+    echo Please provide a DUT serial number
+    exit 1
+fi
+
+set -e
+cd /syzygy/development/hvu/syzygy-workspace/tests-provisioning
+source test-env/bin/activate
+testtool.py run -s src/tests_vanquish/suites/vanquish_bringup.yaml --db -e $DUT
+testtool.py run -s src/tests_vanquish/suites/vanquish_tenant_deploy.yaml --db --env email=h.vu@f5.com -e $DUT

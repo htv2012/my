@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""
+Generate the repr for a class
+"""
+import argparse
+import io
+import subprocess
+import platform
+
+
+def format_attribute(name):
+    return '            f"%s={self.%s!r}"\n' % (name, name)
+
+
+def generate_repr(attributes):
+    sep = '            f", "\n'
+
+    buffer = io.StringIO()
+    buffer.write("    def __repr__(self):\n")
+    buffer.write("        return (\n")
+    buffer.write('            f"{self.__class__.__name__}("\n')
+    buffer.write(sep.join(format_attribute(name) for name in attributes))
+    buffer.write('            f")"\n')
+    buffer.write("        )\n")
+
+    return buffer.getvalue()
+
+
+def copy_to_clipboard(text):
+    system = platform.system()
+    command = []
+    if system == "Darwin":
+        command = ["pbcopy"]
+    elif system == "Linux":
+        command = ["xsel", "-b"]
+
+    if command:
+        subprocess.run(command, text=True, input=text)
+        print("The above is copied to clipboard")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("attributes", nargs="+")
+    options = parser.parse_args()
+    text = generate_repr(options.attributes)
+    print(text)
+
+    copy_to_clipboard(text)
+
+
+if __name__ == "__main__":
+    main()

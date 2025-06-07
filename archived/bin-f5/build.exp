@@ -1,0 +1,58 @@
+#!/usr/bin/env expect
+# Script to display DUT /etc/PRODUCT
+package require http
+
+
+set legacyPassword "default"
+set newPassword "f5site02"
+
+# Parameter check
+set scriptName [file tail [info script]]
+if {$argc < 1} {
+    puts "$scriptName - Script to display /etc/PRODUCT"
+    puts ""
+    puts "Syntax: $scriptName IP [command]"
+    exit 1
+}
+
+set host [exec mgmt [lindex $argv 0]]
+
+# Connects and supplies the password
+set timeout 10
+spawn ssh root@${host}
+expect {
+    "yes/no" {
+        # Asked to add the IP to known hosts list
+        send "yes\r"
+        exp_continue
+    }
+    -nocase "password:" {
+        send "${legacyPassword}\r"
+        exp_continue
+    }
+    "No route to host" {
+        exit 1
+    }
+    "Network is unreachable" {
+        exit 1
+    }
+    "Connection refused" {
+        exit 1
+    }
+    "Connection reset by peer" {
+        exit 1
+    }
+    "Permission denied, please try again." {
+        # Legacy password failed, try the new password
+        send "${newPassword}\r"
+        exp_continue
+    }
+    "# " {
+        puts "\n\n"
+        send "pr -m -t /etc/{PRODUCT,PLATFORM}\r"
+    }
+}
+expect "# " {
+    send "exit\r"
+}
+

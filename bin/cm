@@ -1,0 +1,3 @@
+#!/bin/sh
+# Script to comment out lines of text
+sed 's/^/#/'

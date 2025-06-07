@@ -1,0 +1,32 @@
+#!/bin/bash
+#whatis: Backup ADM, good for license tests
+
+function ctrl() {
+    cfg="$HOME/.testenv/$stackId/ssh.cfg"
+    idFile="$HOME/.testenv/$stackId/id_ed25519_testenv"
+    ssh -F "$cfg" -i "$idFile" ctrl-1 "$@"
+}
+
+
+{
+    echo "# Install SQLite"
+    adm ssh ctrl-1 'sudo apt-get update'
+    adm ssh ctrl-1 'sudo apt-get install -y sqlite3'
+
+    echo "# Start NMS service"
+    adm ssh ctrl-1 'sudo systemctl start nms'
+
+    echo "# Enable backup-adm"
+    adm ssh ctrl-1 'sudo sed --in-place "/^#\.\/backup-adm\.sh/s/^#//" /etc/nms/scripts/backup.sh'
+
+    echo "# Enable restore-adm"
+    adm ssh ctrl-1 'sudo sed --in-place "/^#\.\/restore-adm\.sh/s/^#//" /etc/nms/scripts/restore.sh'
+
+    echo "# Make scripts executable"
+    adm ssh ctrl-1 'sudo chmod +x /etc/nms/scripts/*.sh'
+
+    echo "# Start the backup script"
+    adm ssh ctrl-1 'cd /etc/nms/scripts; sudo ./backup.sh'
+
+    echo "# Done"
+} | grep "^#"

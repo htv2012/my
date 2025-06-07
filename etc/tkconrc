@@ -1,0 +1,6 @@
+set ::tkcon::OPT(rows) 40
+set ::tkcon::OPT(cols) 120
+#set ::tkcon::COLOR(bg) OldLace
+
+tkcon font "Source Code Pro" 12
+

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Attempts to guess the admin password for a DUT
+
+IP="$1"
+if [[ -z $IP ]] || [[ $1 = "-h" ]]
+then
+    me="$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")"
+    echo Usage: $me MGMT_IP_ADDRESS_OF_DUT
+    exit 1
+fi
+IP=$(mgmt $IP)
+
+KNOWN_PASSWORDS=(ess-pwe-f5site02 admin default f5site02 f5site03 ess-pwe-f5site03)
+for PASSWORD in ${KNOWN_PASSWORDS[@]}
+do
+    curl --silent --insecure \
+        --header "Accept: application/yang-data+json" \
+        --user "admin:$PASSWORD" \
+        "https://$IP:8888/restconf/data/openconfig-system:system/openconfig-system:aaa/authentication/f5-system-aaa:users/user=admin" \
+        > /tmp/crack.json
+
+    if fgrep -q admin /tmp/crack.json
+    then
+        echo $PASSWORD
+        exit
+    fi
+done
+
+exit 1

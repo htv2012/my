@@ -1,0 +1,13 @@
+date:
+  type: str
+  help: Blog date?
+name:
+  type: str
+  help: File name?
+title:
+  type: str
+  help: Blog title?
+category:
+  type: str
+  help: Blog category?
+

@@ -1,0 +1,9 @@
+ProjectName:
+  type: str
+  help: Project Name
+DbName:
+  help: Database Name
+TableName:
+  help: Table Name
+URL:
+  help: URL to the question

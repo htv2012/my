@@ -1,0 +1,2 @@
+#!/bin/sh
+PYTHONPATH="$HOME/Projects/leetcode/common" /var/tmp/venv/sandbox/bin/python -m tree "$@"

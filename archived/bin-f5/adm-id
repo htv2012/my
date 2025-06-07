@@ -1,0 +1,3 @@
+#!/bin/sh
+#whatis: Show the stack ID
+echo $stackId

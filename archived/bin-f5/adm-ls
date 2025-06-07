@@ -1,0 +1,67 @@
+#!/bin/bash
+#whatis: List ADM objects
+
+ERR=0
+trap "ERR=1" ERR
+
+# Get the controller's info
+username=$(jq '.ctrl_admin_username' "${HOME}/.testenv/$stackId/symbols.json" -r)
+password=$(jq '.ctrl_admin_pass' "${HOME}/.testenv/$stackId/symbols.json" -r)
+hostname=$(jq '.control_host_ips[0]' "${HOME}/.testenv/$stackId/symbols.json" -r)
+
+function get_names() {
+    https "--auth=${username}:${password}" --verify=no GET "${hostname}$1" Accept:application/json | jq '.items[].metadata.name' -r
+}
+function get_uids() {
+    https "--auth=${username}:${password}" --verify=no GET "${hostname}$1" Accept:application/json | jq '.items[].metadata.uid' -r
+}
+
+# Delete sites
+for site_id in $(get_uids /api/adm/v1/sites)
+do
+    echo "/api/adm/v1/sites/$site_id "
+done
+
+for environment_id in $(get_uids /api/adm/v1/environments)
+do
+    for gateway_id in $(get_uids /api/adm/v1/environments/$environment_id/gateways)
+    do
+        echo "/api/adm/v1/environments/$environment_id/gateways/$gateway_id"
+    done
+
+    for app_id in $(get_uids /api/adm/v1/environments/$environment_id/apps)
+    do
+        for comp_id in $(get_uids /api/adm/v1/environments/$environment_id/apps/$app_id/web-components)
+        do
+            echo "/api/adm/v1/environments/$environment_id/apps/$app_id/web-components/$comp_id"
+        done
+
+        for comp_id in $(get_uids /api/adm/v1/environments/$environment_id/apps/$app_id/tcpudp-components)
+        do
+            echo "/api/adm/v1/environments/$environment_id/apps/$app_id/tcpudp-components/$comp_id"
+        done
+
+        echo "/api/adm/v1/environments/$environment_id/apps/$app_id"
+    done  # app_id
+
+    echo "/api/adm/v1/environments/$environment_id"
+done  # environment_id
+
+
+for name in $(get_names /api/platform/v1/users)
+do
+    if [ $name != "admin" ]
+    then
+        echo "/api/platform/v1/users/$name"
+    fi
+done
+
+for name in $(get_names /api/platform/v1/roles)
+do
+    if [ $name != "admin" ]
+    then
+        echo "/api/platform/v1/roles/$name"
+    fi
+done
+
+exit $ERR

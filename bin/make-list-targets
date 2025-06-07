@@ -1,0 +1,44 @@
+#!/bin/env python3
+import dataclasses
+import fileinput
+import io
+
+
+@dataclasses.dataclass(eq=True, order=True)
+class Target:
+    name: str
+    desc: str
+    dep: list
+
+    def __str__(self):
+        buf = io.StringIO()
+        buf.write(f"{self.name}:")
+        if self.desc:
+            buf.write(f" {self.desc}")
+        if self.dep:
+            buf.write(f". Requires: {', '.join(self.dep)}")
+        return buf.getvalue()
+
+
+def main():
+    """Entry"""
+    targets = []
+    description = ""
+    for line in fileinput.input():
+        if line.startswith("### "):
+            description = line.removeprefix("### ").strip()
+            continue
+
+        tokens = line.split()
+        if tokens and tokens[0].endswith(":") and not tokens[0].startswith("."):
+            name = tokens.pop(0).removesuffix(":")
+            targets.append(Target(name, description, tokens))
+            description = ""
+
+    targets.sort()
+    for target in targets:
+        print(target)
+
+
+if __name__ == "__main__":
+    main()

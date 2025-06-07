@@ -1,0 +1,45 @@
+#!/usr/bin/awk -f
+# ======================================================================
+# Script to add main function to a python script
+#
+# INPUT
+#
+# if __name__ == '__main___':
+#     do_this()
+#     ...
+#     do_that()
+#
+# OUTPUT
+#
+# def main():
+#     do_this()
+#     ...
+#     do_that()
+#
+#
+# if __name__ == '__main__':
+#     main()
+# ======================================================================
+
+BEGIN {
+    print "def main():"
+}
+
+# For empty lines, print them, do not indent
+/^$/ {
+    print ""
+    next
+}
+
+# For lines that does not match this pattern (i.e. most of them), we
+# indent 4 spaces to fit under "def main():"
+! /if __name__ ==/ {
+    print "    " $0
+}
+
+END {
+    print "\n"
+    print "if __name__ == '__main__':"
+    print "    main()"
+}
+

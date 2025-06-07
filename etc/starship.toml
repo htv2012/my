@@ -1,0 +1,8 @@
+[aws]
+format = ""
+
+[directory]
+truncation_symbol = "../"
+
+[status]
+disabled = false

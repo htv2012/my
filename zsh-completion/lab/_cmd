@@ -1,0 +1,5 @@
+#compdef cmd
+local -a subcmds
+subcmds=( peter paul mary )
+compadd -a subcmds
+

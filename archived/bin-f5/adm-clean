@@ -1,0 +1,84 @@
+#!/bin/sh
+#whatis: Remove all ADM objects
+
+ERR=0
+trap "ERR=1" ERR
+
+# Get the controller's info
+username=$(jq '.ctrl_admin_username' "${HOME}/.testenv/$stackId/symbols.json" -r)
+password=$(jq '.ctrl_admin_pass' "${HOME}/.testenv/$stackId/symbols.json" -r)
+hostname=$(jq '.control_host_ips[0]' "${HOME}/.testenv/$stackId/symbols.json" -r)
+
+function get_names() {
+    https "--auth=${username}:${password}" --verify=no GET "${hostname}$1" Accept:application/json | jq '.items[].metadata.name' -r
+}
+
+function get_uids() {
+    https "--auth=${username}:${password}" --verify=no GET "${hostname}$1" Accept:application/json | jq '.items[].metadata.uid' -r
+}
+
+function delete_object() {
+    echo https "--auth=admin:Testenv12#" --verify=no DELETE "${hostname}$1" Accept:application/json
+    https '--auth=admin:Testenv12#' --verify=no DELETE "${hostname}$1" Accept:application/json
+    sleep 1
+}
+
+# Delete sites
+for site_id in $(get_uids /api/adm/v1/sites)
+do
+    delete_object "/api/adm/v1/sites/$site_id"
+done
+
+# Delete environments
+for env_id in $(get_uids /api/adm/v1/environments)
+do
+    # Delete all apps
+    for app_id in $(get_uids /api/adm/v1/environments/$env_id/apps)
+    do
+        # Delete all web components
+        for comp_id in $(get_uids /api/adm/v1/environments/$env_id/apps/$app_id/web-components)
+        do
+            delete_object /api/adm/v1/environments/$env_id/apps/$app_id/web-components/$comp_id
+        done
+
+        # Delete all TCP/UDP components
+        for comp_id in $(get_uids /api/adm/v1/environments/$env_id/apps/$app_id/tcpudp-components)
+        do
+            delete_object /api/adm/v1/environments/$env_id/apps/$app_id/tcpudp-components/$comp_id
+        done
+
+        sleep 5
+        delete_object /api/adm/v1/environments/$env_id/apps/$app_id
+    done
+
+    # Delete all gateways
+    for gw_id in $(get_uids /api/adm/v1/environments/$env_id/gateways)
+    do
+        delete_object /api/adm/v1/environments/$env_id/gateways/$gw_id
+    done
+
+    # Delete the environment
+    sleep 5
+    delete_object "/api/adm/v1/environments/$env_id"
+
+done
+
+# Delete all users, except for admin
+for name in $(get_names /api/platform/v1/users)
+do
+    if [ $name != "admin" ]
+    then
+        delete_object "/api/platform/v1/users/$name"
+    fi
+done
+
+# Delete all roles, except for admin
+for name in $(get_names /api/platform/v1/roles)
+do
+    if [ $name != "admin" ]
+    then
+        delete_object "/api/platform/v1/roles/$name"
+    fi
+done
+
+exit $ERR

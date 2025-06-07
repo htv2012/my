@@ -1,0 +1,3 @@
+#!/bin/sh
+# Script to uncomment lines of text
+sed 's/^#//'

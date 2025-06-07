@@ -1,0 +1,15 @@
+import pytest
+
+from main import {{ func }}
+
+
+@pytest.mark.parametrize(
+    ["", "expected"],
+    [
+        pytest.param(, expected, id="example"),
+    ],
+)
+def test_{{ func }}(expected, capfd):
+    stdout = capfd.readouterr().out
+    assert stdout == expected
+

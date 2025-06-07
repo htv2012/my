@@ -1,0 +1,8 @@
+results.Pass.condition()
+results.Pass.generate()
+results.Error.condition()
+results.Error.generate()
+results.Failure.condition()
+results.Failure.generate()
+results.Message.condition()
+results.Message.generate()

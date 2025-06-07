@@ -1,0 +1,6 @@
+project_name:
+  type: str
+  help: "Project name: "
+slug:
+  type str:
+  help: "Slug (project name with dash replaced by underscore): "

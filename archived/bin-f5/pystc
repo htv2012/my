@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Script to start a sandbox to systest-common
+cd ~/code/systest-common
+source ~/.virtualenv/systest-common/bin/activate
+python3 -i ~/myenv/bin-f5/pystc.py "$@"

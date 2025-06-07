@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#whatis: View adm.gen.conf $1=data-1(default), data-2, ...
+
+# Ensure stackId is set
+if [[ -z $stackId ]]
+then
+    echo Expect environment variable stackId, but not found
+    exit 1
+fi
+
+# Download and view nginx.conf $1: host (default=data-1)
+remoteHost=${1:-data-1}
+destDir="/tmp/$stackId/$remoteHost/etc/nginx/http.d"
+mkdir -p "$destDir"
+dest="$destDir/adm.gen.conf"
+if adm scp "$remoteHost:/etc/nginx/http.d/adm.gen.conf" "$dest"
+then
+    vim -R "$dest"
+fi

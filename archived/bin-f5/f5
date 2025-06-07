@@ -1,0 +1,17 @@
+#!/bin/sh
+#whatis: Displays F5 aliases and functions
+{
+    # Aliases in f5.zsh
+    awk '/^alias/ { sub(/=.*/, "", $2); desc=$0; sub(/^.*# /, "", desc); printf "%s %s\n", $2, desc}' "$HOME/myenv/startup/f5.zsh"
+
+    # Functions in f5.zsh
+    awk '/^function [^_]/{ sub(/\(.*/, "", $2); cmd=$2; sub(/^.*# */, ""); printf "%s %s\n", cmd, $0 }' $HOME/myenv/startup/f5.zsh
+
+    # Commands in bin-f5 dir
+    pushd "$HOME/myenv/bin-f5" > /dev/null
+    awk '/^# *whatis:/ { gsub(/^# *whatis: */, ""); printf "%s %s\n", FILENAME, $0 }' *
+    popd > /dev/null
+} \
+    | awk '{ cmd = $1; $1 = ""; printf "%-20s # %s\n", cmd, $0 }' \
+    | sort \
+    | grep "${@:-.}"

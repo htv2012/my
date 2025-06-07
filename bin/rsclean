@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# ======================================================================
+# Find all sub directories which contains Cargo.toml and target
+# Then cllean
+# ======================================================================
+find "$PWD" -type f -name Cargo.toml | while IFS= read -r projectFile
+do
+    projectDir=$(dirname "$projectFile")
+    test -d "$projectDir/target" || continue
+    cd "$projectDir" || continue
+
+    echo "Clean: $projectDir" 
+    cargo clean
+done
+

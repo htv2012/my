@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#whatis: ssh into a testenv host
+
+cfg="$HOME/.testenv/$stackId/ssh.cfg"
+idFile="$HOME/.testenv/$stackId/id_ed25519_testenv"
+ssh -F "$cfg" -i "$idFile" "$@"

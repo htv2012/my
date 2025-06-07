@@ -1,0 +1,10 @@
+project_name:
+  help: "Name the project"
+description:
+  help: "Describe the project"
+Title :
+  help: "Give the project a title"
+URL:
+  help: "Enter URL for the project"
+func:
+  help: "Name the main function"

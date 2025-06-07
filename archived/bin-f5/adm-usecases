@@ -1,0 +1,4 @@
+#!/bin/sh
+#whatis: Get a list of usecases
+adm ssh ctrl-1 'ls /etc/nms/modules/adm/templates/usecases'
+

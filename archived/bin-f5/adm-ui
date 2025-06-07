@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+#whatis: Opens the web UI for the controller via firefox
+import json
+import os
+import types
+import webbrowser
+
+
+def load_symbols():
+    """Load symbols from $TESTRUN_SYMBOL file"""
+    symbols_file = os.getenv("TESTRUN_SYMBOLS") or os.getenv("SYSTEST_SYMBOLS")
+    if symbols_file is None:
+        raise SystemExit(
+            "Please define environment variable TESTRUN_SYMBOLS or SYSTEST_SYMBOLS"
+        )
+    with open(symbols_file, encoding="utf-8") as stream:
+        symbols = json.load(stream)
+
+    return types.SimpleNamespace(**symbols)
+
+
+def main():
+    """Open the web browser."""
+    symbols = load_symbols()
+    host = symbols.control_host_ips[0]
+    browser = webbrowser.get("firefox")
+    url = f"https://{host}/"
+    browser.open(url)
+
+
+if __name__ == "__main__":
+    main()

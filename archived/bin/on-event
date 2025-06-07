@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""
+Script to watch for an event to happen and perform some action
+"""
+import argparse
+import contextlib
+import os
+import subprocess
+import time
+
+
+def get_options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file", required=True)
+    parser.add_argument("-a", "--action", nargs="*")
+    options = parser.parse_args()
+    return options
+
+
+def run(command, filename):
+    if command:
+        subprocess.call(command)
+        print("-" * 80)
+    else:
+        print(f"File changed: {filename}")
+
+
+def main():
+    options = get_options()
+
+    modified_time = os.stat(options.file).st_mtime
+    while True:
+        polled_modified_time = os.stat(options.file).st_mtime
+        if polled_modified_time != modified_time:
+            run(options.action, options.file)
+            modified_time = polled_modified_time
+
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    main()

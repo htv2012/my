@@ -1,0 +1,16 @@
+# ======================================================================
+# Create password for a new user
+# ======================================================================
+
+pwfile=/etc/nms/nginx/.htpasswd
+user=$1
+
+if [[ -z $user ]]
+then
+    echo user name required
+    exit 1
+fi
+
+hash=$(openssl passwd -6 'Testenv12$')
+printf "\n$user:$hash" >> $pwfile
+cat $pwfile

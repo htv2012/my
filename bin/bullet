@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""
+Formats the markdown bullets
+"""
+import argparse
+import fileinput
+import re
+import textwrap
+
+
+def format_bullet(text, width):
+    # Determine the amount of indentation based on the first bullet
+    matched = re.search(r"^( *)[-*]", text)
+    indent = matched.group(1)
+
+    # Trim text and split the bullets
+    text = "\n".join(line.strip() for line in text.splitlines())
+    bullets = re.split(r"[-*] ", text)
+    del bullets[0]  # First element is always an empty string
+
+    # Format
+    wrapper = textwrap.TextWrapper(
+        width=width,
+        initial_indent=f"{indent}* ",
+        subsequent_indent=f"{indent}  "
+    )
+    formatted = "\n".join(wrapper.fill(bullet) for bullet in bullets)
+    return formatted
+
+
+def main():
+    """ Entry """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-w", "--width", type=int, default=72)
+    parser.add_argument("file", nargs="*")
+    options = parser.parse_args()
+
+    text = "".join(fileinput.input(options.file))
+    print(format_bullet(text, options.width))
+
+
+if __name__ == '__main__':
+    main()

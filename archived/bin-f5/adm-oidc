@@ -1,0 +1,39 @@
+#!/bin/sh
+#whatis: Prepare datapath hosts for OIDC
+
+echo ""
+echo "#"
+echo "# testenv: Allow traffic between keycloak and datapath"
+echo "#"
+for datapath_ip in $(adm symbols '.datapath_host_ips | .[]' -r)
+do
+    testenv usercmd run allow-ip $(kc id) "$datapath_ip"
+done
+
+if [ "$1" = "install" ]
+then
+    echo ""
+    echo "#"
+    echo "# ctrl-1: Download /etc/nms/modules/adm/templates/usecases/f5-oidc-v1/files/openid_connect.js"
+    echo "#"
+    local_file=/tmp/openid_connect.js
+    adm ssh ctrl-1 'sudo cat /etc/nms/modules/adm/templates/usecases/f5-oidc-v1/files/openid_connect.js' > "$local_file"
+
+    for host in $(adm hosts data-)
+    do
+        # Install nginx-plus-module-njs
+        echo ""
+        echo "#"
+        echo "# ${host}: Install nginx-plus-module-njs"
+        echo "#"
+        adm ssh "$host" 'sudo apt install -y nginx-plus-module-njs'
+
+        # Copy openid_connect.js
+        echo ""
+        echo "#"
+        echo "# ${host}: Upload file to /etc/nginx/conf.d/openid_connect.js"
+        echo "#"
+        adm scp $local_file "${host}:/tmp/openid_connect.js"
+        adm ssh "$host" 'sudo mv /tmp/openid_connect.js /etc/nginx/conf.d/openid_connect.js'
+    done
+fi

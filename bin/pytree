@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+import ast
+import argparse
+import pathlib
+
+
+def find_package(path_to_python_module):
+    dirs = []
+    path = path_to_python_module.parent
+    while (path / "__init__.py").exists():
+        dirs.append(path.name)
+        path = path.parent
+    package = ".".join(reversed(dirs))
+    return package
+
+
+class ModuleVisitor(ast.NodeVisitor):
+    def __init__(self):
+        self.level = 1
+
+    def indent(self):
+        print("    " * self.level, end="")
+
+    def visit_ClassDef(self, node):
+        self.indent()
+        print(f"class {node.name}", end="")
+        bases = ast.unparse(node.bases)
+        if bases and bases != "object":
+            print(f"({bases})")
+        else:
+            print()
+
+        # Visit methods
+        self.level += 1
+        self.generic_visit(node)
+        self.level -= 1
+
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        """Visits a function.
+
+        See:
+        https://greentreesnakes.readthedocs.io/en/latest/nodes.html?highlight=functiondef#FunctionDef
+        https://greentreesnakes.readthedocs.io/en/latest/nodes.html?highlight=functiondef#arguments
+
+        Attributes: name, args, body, decorator_list, return, type_comment
+        args: arguments with attributes: args, posonlyargs, kwonlyargs, vararg, kwarg
+        """
+        if node.name.startswith("_") and node.name != "__init__":
+            return
+        self.indent()
+        print(f"def {node.name}({ast.unparse(node.args)})")
+        if node.decorator_list:
+            self.indent()
+            names = [getattr(n, "id", n) for n in node.decorator_list]
+            print(f"{names}")
+
+
+def show_module(mod, path):
+    package = find_package(path)
+    if path.name == "__init__.py":
+        print(f"{package}")
+    else:
+        print(f"{package}.{path.stem}")
+    visitor = ModuleVisitor()
+    visitor.visit(mod)
+    print()
+
+
+def main():
+    """ Entry """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("dest", type=pathlib.Path, nargs="+")
+    options = parser.parse_args()
+
+    for root in options.dest:
+        root = root.resolve()
+
+        for path_to_python_module in root.glob("**/*.py"):
+            contents = path_to_python_module.read_text()
+            if not contents:
+                continue
+            mod = ast.parse(contents, filename=str(path_to_python_module))
+            show_module(mod, path_to_python_module)
+
+
+if __name__ == '__main__':
+    main()
+

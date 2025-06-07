@@ -1,0 +1,8 @@
+if {$tcl_interactive} {
+    if {![catch {package require tclreadline}]} {
+        puts "Tcl [info patchlevel] with readline"
+        proc ::tclreadline::prompt1 {} { return "% " }
+        ::tclreadline::Loop
+    }
+}
+

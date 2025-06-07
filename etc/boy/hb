@@ -1,0 +1,59 @@
+NAME
+
+    hb - Uploads data to a hastebin server
+
+SYNOPSYS
+
+    hb [OPTION]... [FILE]...
+
+DESCRIPTION
+
+    When invoked without any file name, hb will reads from standard
+    input. If the caller supplies the file names, each of them will be
+    uploaded separately. Upon completion, hb will print to the standard
+    output the URL for each upload.
+
+    -h, --help
+        Displays help and exit
+
+CONFIGURATION
+
+    By default, hb will upload to http://localhost:7777. If you
+    want to upload to a different server, there are three ways to
+    configure it.
+
+    The first is to create a configuration file in the same directory
+    of the script and name it `hb.json`. In a multiple-user
+    environment, this configuration is meant to be global to all
+    the users.
+
+    The second is to create a per-user configuration file in
+    `~/.config/hb.json`.
+
+    Below is an example of such configuration file:
+
+        {
+            "HASTE_SERVER": "http://my-hastebin.com"
+        }
+
+    The third is to use an environment variable. Here is an example
+    for the bash shell:
+
+        export HASTE_SERVER=http://my-hastebin.com
+
+    Below is the order of look-up to find the server, with the
+    environment variable having the highest precedence:
+
+        1. The environment variable
+        2. The global configuration file
+        3. The per-user configuration file
+        4. If all failed, use http://localhost:7777
+
+LOG
+
+    hb keeps a log of all the URLs in ~/.hb.log
+
+AUTHOR
+
+    Written by Hai Vu (haivu2004 at gmail dot com)
+

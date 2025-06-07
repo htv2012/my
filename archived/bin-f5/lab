@@ -1,0 +1,44 @@
+#!/bin/bash
+
+PROJECT=$(basename $PWD)
+PROJECT_DIR=/syzygy/development/hvu/notebooks/books/$USER
+mkdir -p $PROJECT_DIR/$PROJECT
+echo Notebooks location: $PROJECT_DIR
+
+case $PROJECT in
+    (confd-client)
+        PYTHONPATH=$PWD/src
+        PORT=5001
+        ;;
+    (syzygy-docker)
+        PYTHONPATH=$PWD
+        PORT=5006
+        ;;
+    (syzygy-parser)
+        PYTHONPATH=$PWD
+        PORT=5002
+        ;;
+    (tests-provisioning)
+        PYTHONPATH=$PWD/src
+        PORT=5007
+        ;;
+    (tests-vanquish)
+        PYTHONPATH=$PWD/src
+        PORT=5003
+        ;;
+    (tests-velpst)
+        PYTHONPATH=$PWD/src
+        PORT=5004
+        ;;
+    (syzygy-common-test)
+        PYTHONPATH=$PWD/src
+        PORT=5005
+        ;;
+    (*)
+        echo Do not have set up for this project yet
+        exit 1
+        ;;
+esac
+
+PYTHONPATH=$PYTHONPATH jupyter lab --no-browser --ip=0.0.0.0 --port=$PORT --notebook-dir=$PROJECT_DIR
+

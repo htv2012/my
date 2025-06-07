@@ -1,0 +1,29 @@
+#!/bin/sh
+#whatis: Configure KeyCloak redirection URIs
+
+
+show_uri(){ #$=ip
+    uri="http://$1:8888/_codexch"
+    echo "$uri"
+    echo "$uri" | pbcopy
+    echo ""
+
+}
+
+
+echo "#"
+echo "# Controller"
+echo "#"
+for host in $(adm ip)
+do
+    show_uri "$host"
+done
+echo ""
+
+echo "#"
+echo "# Datapath"
+echo "#"
+for host in $(adm data)
+do
+    show_uri "$host"
+done

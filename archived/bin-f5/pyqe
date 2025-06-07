@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Script to start a sandbox to data-plane/declarative-ext-api/qe
+cd ~/code/data-plane/declarative-ext-api/qe/functional
+source venv-test/bin/activate
+python3 -i ~/myenv/bin-f5/pyqe.py "$@"
+

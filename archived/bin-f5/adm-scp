@@ -1,0 +1,5 @@
+#!/bin/sh
+#whatis: Scp to/from testenv hosts
+cfg="$HOME/.testenv/$stackId/ssh.cfg"
+idFile="$HOME/.testenv/$stackId/id_ed25519_testenv"
+scp -F "$cfg" -i "$idFile" "$@"

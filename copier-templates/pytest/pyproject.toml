@@ -1,0 +1,14 @@
+# pyproject.toml
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "WARNING"
+
+[tool.ruff.lint]
+# pyflakes, pycodestyle, isort
+# F: Pyflakes
+# E: PyCodeStyle
+# W: PyCodeStyle warnings
+# I001: isort - unsorted-imports
+# I002: isort - missing-required-import
+select = ["F", "E", "W", "I001"]
+

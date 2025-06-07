@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ROOT=/syzygy/development/hvu/notebooks
+cd $ROOT
+source ~/.virtualenv/notebooks/bin/activate
+jupyter lab --no-browser \
+            --ip=0.0.0.0 \
+            --port=7777 \
+            --config=jupyter_notebook_config.py \
+            --notebook-dir=$ROOT/books
+
+

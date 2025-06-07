@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#whatis: Show datapath host IPs
+adm symbols '.datapath_host_ips | .[]' -r

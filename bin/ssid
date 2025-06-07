@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if which nmcli > /dev/null 2>&1
+then
+    nmcli -f active,ssid device wifi list | awk '$1=="yes" { print $2 }'
+elif which networksetup > /dev/null 2>&1
+then
+    networksetup -getairportnetwork en0 | awk '/Current Wi-Fi Network:/ { printf "%s", $NF }'
+fi

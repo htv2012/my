@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Set up environment, then drive the sysco-shell.py
+
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+venv_dir=${HOME}/.virtualenv/sysco-shell
+stc_dir=${HOME}/code/systest-common
+requirements=$stc_dir/requirements.txt
+
+if ! [[ -e $venv_dir ]]
+then
+    python3 -m venv $venv_dir
+    source ${venv_dir}/bin/activate
+    pip install --upgrade pip
+    pip install -r $requirements
+    pip install ipython
+    deactivate
+fi
+
+cd $stc_dir
+source ${venv_dir}/bin/activate
+PYTHONPATH=$$stc_dir:$stc_dir/libs:$stc_dir/tests ipython -i $script_dir/sysco-shell.py

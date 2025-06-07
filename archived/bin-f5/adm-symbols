@@ -1,0 +1,5 @@
+#!/bin/sh
+#whatis: Show symbols
+jqExpression="${1:-.}"
+shift
+jq "$jqExpression" "$HOME/.testenv/$stackId/symbols.json" "$@"

@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""
+Locates tenant images
+"""
+import argparse
+import html.parser
+import json
+import logging
+import os
+import pathlib
+import posixpath
+import urllib.error
+import urllib.request
+
+
+class LinksParser(html.parser.HTMLParser):
+    def __init__(self, logger, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.links = []
+        self.logger = logger
+
+    def handle_starttag(self, tag, attrs):
+        if tag != "a":
+            return
+        attrs = dict(attrs)
+        url = attrs["href"]
+        self.logger.debug("href=%s", url)
+        self.links.append(url)
+
+    def find(self, suffix, default=None):
+        found = next(
+            (link for link in self.links if link.endswith(suffix)),
+            default
+        )
+        return found
+
+
+def get_options(config):
+    parser = argparse.ArgumentParser(
+        description="Finds tenant image, config file is at ~/.config/southeastwind/ti.json",
+        epilog="Example: ti -B v14.1.x-miro-vanquish/daily -e .ALL-VELOS.qcow2.zip.bundle -l WARN",
+
+    )
+    parser.add_argument(
+        "-s", "--server",
+        default=config["server"],
+        help="default: 'http://spkapex.olympus.f5net.com:9998'",
+    )
+    parser.add_argument(
+        "-B", "--branch",
+        default=config["branch"],
+        help="default: 'v15.1.x-europa/daily'",
+    )
+    parser.add_argument(
+        "-b", "--build",
+        default="current",
+        help="e.g. 'build229.0', default: 'current'",
+    )
+    parser.add_argument(
+        "-e", "--extension",
+        default=config["extension"],
+        help="default: '.ALL-F5OS.qcow2.zip.bundle'",
+    )
+    parser.add_argument(
+        "-l", "--log-level",
+        choices=["DEBUG", "WARN", "INFO"],
+        default=config["log_level"],
+        help="default: 'WARN'",
+    )
+    options = parser.parse_args()
+    return options
+
+
+def read_config():
+    config_path = pathlib.Path("~/.config/southeastwind/ti.json").expanduser()
+    config_path.parent.mkdir(exist_ok=True)
+    if not config_path.exists():
+        with open(config_path, "w") as stream:
+            json.dump(
+                {
+                    "branch": "v15.1.x-europa/daily",
+                    "build": "current",
+                    "extension": ".ALL-F5OS.qcow2.zip.bundle",
+                    "log_level": "WARN",
+                    "server": "http://spkapex.olympus.f5net.com:9998",
+                },
+                stream, sort_keys=True, indent=4,
+            )
+    with open(config_path) as stream:
+        config = json.load(stream)
+
+    return config
+
+
+def main():
+    """ Entry """
+    config = read_config()
+    options = get_options(config)
+
+    logging.basicConfig()
+    logger = logging.getLogger("ti")
+    logger.setLevel(options.log_level)
+
+    try:
+        url = posixpath.join(options.server, options.branch, options.build, "VM/")
+        logger.debug("url=%s", url)
+        response = urllib.request.urlopen(url)
+    except urllib.error.HTTPError:
+        raise SystemExit("No VM dir found")
+
+    links_parser = LinksParser(logger)
+    links_parser.feed(response.read().decode("utf-8"))
+    image = links_parser.find(options.extension)
+
+    if image is None:
+        raise SystemExit("Image not found")
+
+    print(f"--env TenantBranch={options.branch} --env TenantImage={image}")
+
+
+if __name__ == '__main__':
+    main()

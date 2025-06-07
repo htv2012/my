@@ -1,0 +1,26 @@
+#!/bin/sh
+#whatis: Drives all the adm * commands
+
+if [ "$#" -eq 0 ]
+then
+    origin=$(dirname "$0")
+    pushd "$origin" || exit > /dev/null
+
+    echo "Valid commands are:"
+    echo ""
+
+    awk '/^#whatis: / { \
+        command = FILENAME; \
+        sub(/-/, " ", command); \
+        $1 = "" ; \
+        printf "%-20s #%s\n", command, $0 \
+    }' adm-*
+
+    popd > /dev/null
+    exit
+fi
+
+subCommand="$1"
+shift
+"adm-$subCommand" "$@"
+

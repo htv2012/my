@@ -1,0 +1,20 @@
+#ifndef __{{ClassName|upper}}_HPP__
+#define __{{ClassName|upper}}_HPP__
+
+#include <string>
+#include <vector>
+
+class {{ClassName}}
+{
+  public:
+    {{ClassName}}();
+    {{ClassName}}(const std::string &newName);
+
+    std::string getName();
+    void setName(const std::string &newName);
+  private:
+    std::string name;
+}
+
+#endif
+

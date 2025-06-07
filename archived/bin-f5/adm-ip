@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#whatis: Copy the IP of the first controller's IP to the clipboard
+
+ip=$(adm symbols '.control_host_ips[0]' -r)
+echo "$ip"
+pbcopy <<< "$ip"

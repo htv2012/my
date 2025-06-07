@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""
+Create a logging debug line
+"""
+
+import argparse
+import io
+import platform
+import subprocess
+
+
+def log_variables(var_names: list[str], level: str, one_per_line: bool):
+    buf = io.StringIO()
+    if one_per_line:
+        for name in var_names:
+            buf.write(f'logging.{level}("{name}=%r", {name})\n')
+    else:
+        buf.write(f'logging.{level}("')
+        buf.write(", ".join(f"{name}=%r" for name in var_names))
+        buf.write('", ')
+        buf.write(", ".join(var_names))
+        buf.write(")")
+    return buf.getvalue()
+
+def print_variables(names: list[str], one_per_line:bool):
+    buf = io.StringIO()
+    if one_per_line:
+        for name in names:
+            buf.write('print(f"{%s=}")\n' % name)
+    else:
+        buf.write('print(f"')
+        for name in names:
+            buf.write('{%s=}, ' % name)
+        buf.seek(buf.tell() - 2)
+        buf.write('")\n')
+    return buf.getvalue()
+
+
+def copy_to_clipboard(text: str):
+    system = platform.system()
+    command = []
+    if system == "Darwin":
+        command = ["pbcopy"]
+    elif system == "Linux":
+        command = ["xsel", "-b"]
+    else:
+        raise NotImplementedError(f"for {system}")
+
+    subprocess.run(command, text=True, input=text)
+    print("The above is copied to clipboard")
+
+
+def main():
+    """Entry"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("var_name", nargs="+")
+    parser.add_argument('-1', '--one-per-line', action='store_true')
+    parser.add_argument('-p', '--use-print', action='store_true')
+    parser.add_argument(
+        "-l",
+        "--level",
+        choices=["debug", "info", "warning", "error", "critical"],
+        default="debug",
+    )
+    options = parser.parse_args()
+
+    if options.use_print:
+        out = print_variables(options.var_name, options.one_per_line)
+    else:
+        out = log_variables(options.var_name, options.level, options.one_per_line)
+    print(out)
+    copy_to_clipboard(out)
+
+
+if __name__ == "__main__":
+    main()

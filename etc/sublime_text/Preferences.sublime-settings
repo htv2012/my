@@ -1,0 +1,12 @@
+{
+	"color_scheme": "Packages/Colorsublime - Themes/GrandsonOfObsidian.tmTheme",
+	"ensure_newline_at_eof_on_save": true,
+	"font_face": "FiraCode Nerd Font",
+	"font_size": 12,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"translate_tabs_to_spaces": true,
+	"z": 1
+}

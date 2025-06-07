@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# https://www.nnja.io/post/2020/pycon2020-goodbye-print-hello-debugger/
+# Install IPython: python3 -m pip install ipython
+# Install this file: ln -s ~/myenv/etc/pdbrc ~/.pdbrc
+# In the code: import ipdb; ipydb.set_trace()
+
+import IPython
+from traitlets.config import get_config
+
+cfg = get_config()
+cfg.InteractiveShellEmbed.colors = "Linux"  # syntax highlighting
+cfg.InteractiveShellEmbed.confirm_exit = False
+
+alias interacti IPython.embed(config=cfg)
+

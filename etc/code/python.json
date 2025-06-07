@@ -1,0 +1,15 @@
+{
+    "Main Guard": {
+        "description": "Guard the main entry",
+        "prefix": "ifmain",
+        "body": [
+            "if __name__ == \"__main__\":",
+            "    main()"
+        ]
+    },
+    "JSON Dump": {
+        "description": "JSON dump an object",
+        "prefix": "jdumps",
+        "body": "json.dumps($1, indent=4, sort_keys=True)"
+    }
+}

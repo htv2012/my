@@ -1,0 +1,7 @@
+#!/bin/sh
+# format, isort, and check Python module using ruff
+
+target="${1:-.}"
+uv tool run ruff format "$target" && \
+uv tool run ruff check --select I --fix "$target" && \
+uv tool run ruff check --fix "$target"

@@ -1,0 +1,9 @@
+solution: new
+	mysql -A {{DbName}} < solution.mysql
+
+new:
+	mysql < new.mysql
+
+clean:
+	echo 'drop database if exists {{DbName}};' | mysql
+

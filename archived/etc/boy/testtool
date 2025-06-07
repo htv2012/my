@@ -1,0 +1,429 @@
+# Run a suite
+testtool.py run -s path/to/yaml
+testtool.py run --suite path/to/yaml
+
+# Log to database
+--db
+
+
+================================================================================
+
+
+usage: testtool.py [-h] {run,tests,settings,equipment,database} ...
+
+Syzygy Test Tool
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Section Commands:
+  {run,tests,settings,equipment,database}
+    run                 Run a test
+    tests               Commands related to test information
+    settings            Show the settings for the test tool
+    equipment           Query for information about equipment management
+    database            Commands to interact with the Test Results Database
+
+================================================================================
+
+usage: testtool.py run [-h] [-t TESTS] [-s SUITE_FILES] [-c CONFIG_FILES]
+                       [--setting CMDLINE_SETTINGS] [-d {0,1,2}]
+                       [--tool-debug {0,1,2}] [-n SESSION_NAME] [-l LOG_FILE]
+                       [--log-disable] [--log-dir LOG_DIR] [-p PURPOSE]
+                       [--run-start RUN_START_AT_NODE]
+                       [--repeat-count REPEAT_COUNT]
+                       [--repeat-time REPEAT_TIME] [--repeat-forever]
+                       [--repeat-period REPEAT_PERIOD] [--repeat-on-ef]
+                       [--run-sequence RUN_SEQUENCE]
+                       [--random-seed RANDOM_SEED] [--no-verify]
+                       [-e EQUIPMENT_ITEMS] [--db] [--group GROUP] [--email]
+                       [--to-address EMAIL_TO_ADDRESS] [-T TRIGGER_FILES]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --no-verify           Do not verify tests before running
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+Logging Options:
+  -l LOG_FILE, --log LOG_FILE
+                        Save tool logging information to the specified file
+  --log-disable         Disable automatic log file output
+  --log-dir LOG_DIR     Save test specific log files in this directory,
+                        default: /syzygy/logs/{username}/{run.name}
+
+Test Execution Options:
+  -p PURPOSE, --purpose PURPOSE
+                        What is the purpose of this run: qtp, regression, bvt,
+                        sit, dev, nst, svt, fav, sustaining
+  --run-start RUN_START_AT_NODE
+                        Start the run at a specific Collection Node. For
+                        example: --run-start=//Path/Name
+  --repeat-count REPEAT_COUNT
+                        Repeat the tool run for the specified count. Default =
+                        1
+  --repeat-time REPEAT_TIME
+                        Repeat the tool run for the given amount of time
+  --repeat-forever      Repeat the tool run forever
+  --repeat-period REPEAT_PERIOD
+                        Repeat the tool run at a specified period
+  --repeat-on-ef        Repeat the tests with an error or failure state
+  --run-sequence RUN_SEQUENCE
+                        Specify the sequence mode:
+                        Normal|Shuffle|Rotate|Reverse|Choice|Sample,
+                        default=Normal
+  --random-seed RANDOM_SEED
+                        Define the test tool wide random seed
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+Database Options:
+  --db                  Turns on the database as a service for recording test
+                        results
+  --group GROUP         The name or ID of the Test Group this session is run
+                        against
+
+Email Options:
+  --email               Enable the email generator extension
+  --to-address EMAIL_TO_ADDRESS
+                        Send email to this address. The default is
+                        {username}@f5.com
+
+Trigger Subsystem Options:
+  -T TRIGGER_FILES, --trigger TRIGGER_FILES
+                        Trigger Definition File
+
+================================================================================
+
+usage: testtool.py tests [-h] {list,dump,verify} ...
+
+positional arguments:
+  {list,dump,verify}
+    list              List the test to be run
+    dump              Dump the test tree data
+    verify            Verify the test can execute (but do not run)
+
+optional arguments:
+  -h, --help          show this help message and exit
+
+================================================================================
+
+usage: testtool.py tests list [-h] [-t TESTS] [-s SUITE_FILES]
+                              [-c CONFIG_FILES] [--setting CMDLINE_SETTINGS]
+                              [-d {0,1,2}] [--tool-debug {0,1,2}]
+                              [-n SESSION_NAME] [-p PURPOSE]
+                              [--run-start RUN_START_AT_NODE]
+                              [--repeat-count REPEAT_COUNT]
+                              [--repeat-time REPEAT_TIME] [--repeat-forever]
+                              [--repeat-period REPEAT_PERIOD] [--repeat-on-ef]
+                              [--run-sequence RUN_SEQUENCE]
+                              [--random-seed RANDOM_SEED] [-l LOG_FILE]
+                              [--log-disable] [--log-dir LOG_DIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+Test Execution Options:
+  -p PURPOSE, --purpose PURPOSE
+                        What is the purpose of this run: qtp, regression, bvt,
+                        sit, dev, nst, svt, fav, sustaining
+  --run-start RUN_START_AT_NODE
+                        Start the run at a specific Collection Node. For
+                        example: --run-start=//Path/Name
+  --repeat-count REPEAT_COUNT
+                        Repeat the tool run for the specified count. Default =
+                        1
+  --repeat-time REPEAT_TIME
+                        Repeat the tool run for the given amount of time
+  --repeat-forever      Repeat the tool run forever
+  --repeat-period REPEAT_PERIOD
+                        Repeat the tool run at a specified period
+  --repeat-on-ef        Repeat the tests with an error or failure state
+  --run-sequence RUN_SEQUENCE
+                        Specify the sequence mode:
+                        Normal|Shuffle|Rotate|Reverse|Choice|Sample,
+                        default=Normal
+  --random-seed RANDOM_SEED
+                        Define the test tool wide random seed
+
+Logging Options:
+  -l LOG_FILE, --log LOG_FILE
+                        Save tool logging information to the specified file
+  --log-disable         Disable automatic log file output
+  --log-dir LOG_DIR     Save test specific log files in this directory,
+                        default: /syzygy/logs/{username}/{run.name}
+
+================================================================================
+
+usage: testtool.py tests dump [-h] [-t TESTS] [-s SUITE_FILES]
+                              [-c CONFIG_FILES] [--setting CMDLINE_SETTINGS]
+                              [-d {0,1,2}] [--tool-debug {0,1,2}]
+                              [-n SESSION_NAME] [-e EQUIPMENT_ITEMS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+================================================================================
+
+usage: testtool.py tests verify [-h] [-t TESTS] [-s SUITE_FILES]
+                                [-c CONFIG_FILES] [--setting CMDLINE_SETTINGS]
+                                [-d {0,1,2}] [--tool-debug {0,1,2}]
+                                [-n SESSION_NAME] [-e EQUIPMENT_ITEMS] [--db]
+                                [--group GROUP] [-T TRIGGER_FILES]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+Database Options:
+  --db                  Turns on the database as a service for recording test
+                        results
+  --group GROUP         The name or ID of the Test Group this session is run
+                        against
+
+Trigger Subsystem Options:
+  -T TRIGGER_FILES, --trigger TRIGGER_FILES
+                        Trigger Definition File
+
+================================================================================
+
+usage: testtool.py settings [-h] [-t TESTS] [-s SUITE_FILES] [-c CONFIG_FILES]
+                            [--setting CMDLINE_SETTINGS] [-d {0,1,2}]
+                            [--tool-debug {0,1,2}] [-n SESSION_NAME]
+                            [-l LOG_FILE] [--log-disable] [--log-dir LOG_DIR]
+                            [-p PURPOSE] [--run-start RUN_START_AT_NODE]
+                            [--repeat-count REPEAT_COUNT]
+                            [--repeat-time REPEAT_TIME] [--repeat-forever]
+                            [--repeat-period REPEAT_PERIOD] [--repeat-on-ef]
+                            [--run-sequence RUN_SEQUENCE]
+                            [--random-seed RANDOM_SEED]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+Logging Options:
+  -l LOG_FILE, --log LOG_FILE
+                        Save tool logging information to the specified file
+  --log-disable         Disable automatic log file output
+  --log-dir LOG_DIR     Save test specific log files in this directory,
+                        default: /syzygy/logs/{username}/{run.name}
+
+Test Execution Options:
+  -p PURPOSE, --purpose PURPOSE
+                        What is the purpose of this run: qtp, regression, bvt,
+                        sit, dev, nst, svt, fav, sustaining
+  --run-start RUN_START_AT_NODE
+                        Start the run at a specific Collection Node. For
+                        example: --run-start=//Path/Name
+  --repeat-count REPEAT_COUNT
+                        Repeat the tool run for the specified count. Default =
+                        1
+  --repeat-time REPEAT_TIME
+                        Repeat the tool run for the given amount of time
+  --repeat-forever      Repeat the tool run forever
+  --repeat-period REPEAT_PERIOD
+                        Repeat the tool run at a specified period
+  --repeat-on-ef        Repeat the tests with an error or failure state
+  --run-sequence RUN_SEQUENCE
+                        Specify the sequence mode:
+                        Normal|Shuffle|Rotate|Reverse|Choice|Sample,
+                        default=Normal
+  --random-seed RANDOM_SEED
+                        Define the test tool wide random seed
+
+================================================================================
+
+usage: testtool.py equipment [-h] {list,dump,export,verify} ...
+
+positional arguments:
+  {list,dump,export,verify}
+    list                List the equipment required
+    dump                Dump the given equipment data
+    export              Export the given equipment data
+    verify              Verify the test can execute (but do not run)
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+================================================================================
+
+usage: testtool.py equipment list [-h] [-e EQUIPMENT_ITEMS] [-t TESTS]
+                                  [-s SUITE_FILES] [-c CONFIG_FILES]
+                                  [--setting CMDLINE_SETTINGS] [-d {0,1,2}]
+                                  [--tool-debug {0,1,2}] [-n SESSION_NAME]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+
+================================================================================
+
+usage: testtool.py equipment dump [-h] [-e EQUIPMENT_ITEMS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+================================================================================
+
+usage: testtool.py equipment export [-h] [-e EQUIPMENT_ITEMS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+================================================================================
+
+usage: testtool.py equipment verify [-h] [-e EQUIPMENT_ITEMS] [-t TESTS]
+                                    [-s SUITE_FILES] [-c CONFIG_FILES]
+                                    [--setting CMDLINE_SETTINGS] [-d {0,1,2}]
+                                    [--tool-debug {0,1,2}] [-n SESSION_NAME]
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Equipment Options:
+  -e EQUIPMENT_ITEMS, --equipment EQUIPMENT_ITEMS
+                        Equipment to utilize
+
+General Tool Options:
+  -t TESTS, --tests TESTS
+                        Test file to load
+  -s SUITE_FILES, --suites SUITE_FILES
+                        Suite file to load
+  -c CONFIG_FILES, --config CONFIG_FILES
+                        Extra configuration files to load
+  --setting CMDLINE_SETTINGS
+                        Key/Value settings which override internal settings
+  -d {0,1,2}, --debug {0,1,2}
+                        Enable test debug logging: Levels = 0,1,2
+  --tool-debug {0,1,2}  Enable tool debug logging: Levels = 0,1,2
+  -n SESSION_NAME, --name SESSION_NAME
+                        Specify a Session Name for the invocation. Default =
+                        {username}.{datetime}
+
+================================================================================
+
+usage: testtool.py database [-h] {} ...
+
+positional arguments:
+  {}
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+================================================================================
+

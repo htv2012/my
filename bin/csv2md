@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+"""Convert csv to markdown table."""
+
+import csv
+import fileinput
+
+
+def main():
+    """Entry"""
+    # Extract CSV rows from either a file, or stdin
+    with fileinput.input() as stream:
+        reader = csv.reader(stream)
+        rows = list(reader)
+
+    # Determine the maximum columns widths
+    widths = [
+        max(widths) for widths in zip(*[[len(cell) for cell in row] for row in rows])
+    ]
+
+    # Insert separators row
+    rows.insert(1, ["-" * width for width in widths])
+
+    # Output markdown table
+    for row_number, row in enumerate(rows, 1):
+        inner_text = " | ".join(cell.ljust(width) for width, cell in zip(widths, row))
+        print(f"| {inner_text} |")
+
+
+if __name__ == "__main__":
+    main()

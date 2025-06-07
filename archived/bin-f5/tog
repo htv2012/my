@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# ======================================================================
+#
+# This script will toggle between the pip (official) version of
+# confd-client and the dev version
+#
+# Usage:
+#     tog
+#
+# ======================================================================
+
+# Determine the site-packages dir.
+# Typically test-env/lib/python3.7/site-packages
+SITE_PACKAGES_DIR=$(find test-env -type d -name site-packages)
+cd $SITE_PACKAGES_DIR
+
+# 1-time setup: If we have not symlink to the dev version of confd-client,
+# do it now.
+if [[ ! -e confd.new ]] && [[ ! -e confd.original ]]
+then
+    ln -s /syzygy/development/$USER/syzygy-workspace/confd-client/src/confd confd.new
+fi
+
+# Toggle
+if [[ -e confd.new ]]
+then
+    # confd.new exists means we are using the pip (official) version
+    # of confd.  Now, switch over to the dev version
+    echo Switching to dev version of confd
+    mv confd confd.original
+    mv confd.new confd
+elif [[ -e confd.original ]]
+then
+    # Otherwise, if confd.original exists, we are currently using the
+    # dev version. Switch over the the pip (official) version
+    echo Switching to the pip version of confd
+    mv confd confd.new
+    mv confd.original confd
+fi
+
+ls -hld confd*

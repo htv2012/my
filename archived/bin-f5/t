@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import pathlib
+import subprocess
+
+
+def main():
+    """Entry"""
+    # Load the last arguments used
+    last_args_path = pathlib.Path("~/.config/t.json").expanduser()
+    if not last_args_path.exists():
+        with open(last_args_path, mode="w", encoding="utf-8") as stream:
+            json.dump([], stream)
+
+    with open(last_args_path, mode="r", encoding="utf-8") as stream:
+        last_args = json.load(stream)
+
+    # Gather pytest arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("args", nargs="*")
+    options = parser.parse_args()
+    args = options.args or last_args
+    if "-x" not in args:
+        args.append("-x")
+    if "-s" not in args:
+        args.append("-s")
+    if "-vv" not in args:
+        args.append("-vv")
+    if "--tb=short" not in args:
+        args.append("--tb=short")
+
+    # Save the arguments for next time
+    with open(last_args_path, mode="w", encoding="utf-8") as stream:
+        json.dump(args, stream)
+
+    # Run pytest
+    command = ["pytest"] + args
+    print(" ".join(command))
+    subprocess.run(command)
+
+
+if __name__ == "__main__":
+    main()

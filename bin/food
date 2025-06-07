@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Display list of kids and their favorite food."""
+import argparse
+import csv
+import pathlib
+
+
+def by_person(name):
+    """Filter by person."""
+
+    def match(row):
+        """Match a person name"""
+        return name.casefold() == row[0].casefold()
+
+    return match
+
+
+def by_restaurant(name):
+    """Filter by restaurant."""
+
+    def match(row):
+        """Partial match a restaurant name."""
+        return name.casefold() in row[1].casefold()
+
+    return match
+
+
+def by_any(_):
+    """Default matcher, which matches all rows."""
+
+    def match(_):
+        """Match anything."""
+        return True
+
+    return match
+
+
+def main():
+    """Entry"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--person", type=by_person, default=by_any)
+    parser.add_argument("-r", "--restaurant", type=by_restaurant, default=by_any)
+    options = parser.parse_args()
+
+    # Find the data file
+    data_path = pathlib.Path(__file__).parent.parent / "etc" / "food.csv"
+    with open(data_path, "r", encoding="utf-8") as stream:
+        reader = csv.reader(stream)
+        # rows = map(Dish.from_row, reader)
+        rows = filter(options.person, reader)
+        rows = filter(options.restaurant, rows)
+        rows = list(rows)
+
+        # Determines the column widths
+        headers = ["Name", "Restaurant", "Dish"]
+        width = [len(cell) for cell in headers]
+        for row in rows:
+            for i, cell in enumerate(row):
+                width[i] = max(width[i], len(cell))
+
+        rows.sort()
+
+        rows.insert(0, headers)
+        rows.insert(1, ["-" * col_width for col_width in width])
+        for row in rows:
+            print("| ", end="")
+            for col, cell in enumerate(row):
+                print(cell.ljust(width[col]), end=" | ")
+            print()
+
+
+if __name__ == "__main__":
+    main()

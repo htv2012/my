@@ -1,0 +1,8 @@
+*~
+.cdfile.sqlite
+.DS_Store
+*.pyc
+*.swp
+tags
+.vscode
+lexi-data
