@@ -1,3 +1,3 @@
 # README
 
-My ~/bin
+My custom environment
