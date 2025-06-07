@@ -37,4 +37,4 @@ rse() {  # Edit a rust source
     fi
 }
 
-alias rs='make -f $HOME/myenv/etc/Makefile.rust'
+alias rs='make -f $HOME/my/etc/Makefile.rust'

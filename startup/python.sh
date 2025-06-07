@@ -1,7 +1,7 @@
 # ============================================================================
 # Python
 # ============================================================================
-PYTHONSTARTUP=$MYENV/etc/pythonstartup.py
+PYTHONSTARTUP=$HOME/my/etc/pythonstartup.py
 export PYTHONSTARTUP
 VENV_ROOT=$HOME/.local/share/venv
 export VENV_ROOT
@@ -49,7 +49,7 @@ function mkpy(){ # Creates a python project with Makefile
 }
 
 function sandbox() { # Activate the sandbox virtualenv
-    venv ${VENV_ROOT}/sandbox $HOME/myenv/etc/requirements-sandbox.txt
+    venv ${VENV_ROOT}/sandbox $HOME/my/etc/requirements-sandbox.txt
 }
 
 

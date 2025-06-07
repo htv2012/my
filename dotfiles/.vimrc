@@ -74,7 +74,7 @@ let @f = "%afh%"
 " ======================================================================
 " Custom settings for each file type
 " ======================================================================
-autocmd BufNewFile *.py 0r ~/myenv/etc/boy/skel.py
+autocmd BufNewFile *.py 0r ~/my/etc/boy/skel.py
 au BufNewFile,BufRead *.py
         \ set tabstop=4
         \ softtabstop=4
@@ -83,5 +83,5 @@ au BufNewFile,BufRead *.py
         \ autoindent
         \ fileformat=unix
 
-autocmd BufNewFile *.rs 0r ~/myenv/etc/boy/skel.rs
+autocmd BufNewFile *.rs 0r ~/my/etc/boy/skel.rs
 

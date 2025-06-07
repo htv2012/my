@@ -3112,7 +3112,7 @@
 			<key>title</key>
 			<string>me</string>
 			<key>value</key>
-			<string>cd ~/myenv</string>
+			<string>cd ~/my</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>

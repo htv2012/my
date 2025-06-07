@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # https://www.nnja.io/post/2020/pycon2020-goodbye-print-hello-debugger/
 # Install IPython: python3 -m pip install ipython
-# Install this file: ln -s ~/myenv/etc/pdbrc ~/.pdbrc
+# Install this file: ln -s ~/my/etc/pdbrc ~/.pdbrc
 # In the code: import ipdb; ipydb.set_trace()
 
 import IPython

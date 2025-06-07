@@ -38,7 +38,7 @@ alias ping3='ping -c3'
 alias reshell='exec $SHELL'
 
 # Table: script to show csv file
-alias table='uv run $HOME/myenv/bin/table.py'
+alias table='uv run $HOME/my/bin/table.py'
 
 first_exist() {  # Find first tool that exists
     for tool
@@ -60,7 +60,7 @@ vs() {  # Edit, then source
     script=$1
     if [ -z "$script" ]
     then
-        script=$(find "$MYENV/startup" -type f | fzf)
+        script=$(find "$HOME/my/startup" -type f | fzf)
     fi
     # shellcheck source=/dev/null
     $EDITOR "$script" && . "$script"

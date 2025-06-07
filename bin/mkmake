@@ -1,2 +1,2 @@
 #!/bin/sh
-cat ~/myenv/etc/boy/Makefile >> Makefile
+cat ~/my/etc/boy/Makefile >> Makefile

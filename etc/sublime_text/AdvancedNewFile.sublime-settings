@@ -14,9 +14,9 @@
     },
 
     "alias": {
-        "bin": "~/myenv/bin",
-        "etc": "~/myenv/etc",
-        "myenv": "~/myenv",
+        "bin": "~/my/bin",
+        "etc": "~/my/etc",
+        "my": "~/my",
         "ws": "~/SynologyDrive/src/workspaces"
     }
 }

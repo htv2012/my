@@ -30,7 +30,7 @@ class Config:
         if self.config_path.exists():
             return
 
-        source = pathlib.Path("~/myenv/dotfiles/.config/ob.json").expanduser()
+        source = pathlib.Path("~/my/dotfiles/.config/ob.json").expanduser()
         if source.exists():
             self.config_path.symlink_to(source)
         else:

@@ -68,30 +68,29 @@ first_exist_dir() {
 # =============================================================================
 # Setting the paths
 # =============================================================================
-export MYENV=~/myenv
 PROJECTSROOT="$(first_exist_dir ~/Projects ~/projects)"
 export PROJECTSROOT
-export RIPGREP_CONFIG_PATH=${MYENV}/etc/ripgreprc
+export RIPGREP_CONFIG_PATH=$HOME/my/etc/ripgreprc
 SYNODRIVE="$(first_exist_dir ~/SynologyDrive ~/CloudStation)"
 export SYNODRIVE
 
 # Add Linux-specific bin
 if is_linux
 then
-    PATH="$(append_if_exists "$PATH" "${MYENV}/bin-linux")"
+    PATH="$(append_if_exists "$PATH" "$HOME/my/bin-linux")"
     export PATH
 fi
 
 PATH=$(append_if_exists "$PATH" "/opt/homebrew/bin")
 PATH=$(append_if_exists "$PATH" "/opt/homebrew/sbin")
-PATH="$(append_if_exists "$PATH" "${HOME}/Applications/nvim-macos/bin")"
-PATH="$(append_if_exists "$PATH" "${HOME}/.cargo/bin")"
-PATH="$(append_if_exists "$PATH" "${HOME}/.local/bin")"
-PATH="$(append_if_exists "$PATH" "${HOME}/local-bin")"
-PATH="$(append_if_exists "$PATH" "${HOME}/.local/node/bin")"
-PATH="$(append_if_exists "$PATH" "${HOME}/.poetry/bin")"
-PATH="$(append_if_exists "$PATH" ${MYENV}/bin)"
-PATH="$(append_if_exists "$PATH" ${MYENV}/usr/bin)"
+PATH="$(append_if_exists "$PATH" "$HOME/Applications/nvim-macos/bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/.cargo/bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/.local/bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/local-bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/.local/node/bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/.poetry/bin")"
+PATH="$(append_if_exists "$PATH" $HOME/my/bin)"
+PATH="$(append_if_exists "$PATH" $HOME/my/usr/bin)"
 PATH="$(append_if_exists "$PATH" "/Applications/Visual Studio Code.app/Contents/Resources/app/bin")"
 PATH="$(append_if_exists "$PATH" "/opt/nvim-linux64/bin")"
 PATH="$(append_if_exists "$PATH" /usr/local/go/bin)"
@@ -99,11 +98,11 @@ PATH="$(append_if_exists "$PATH" $HOME/.local/zig)"
 export PATH
 
 # Add custom Python path
-if [ -d "${HOME}/Library/Python" ]
+if [ -d "$HOME/Library/Python" ]
 then
-    cd "${HOME}/Library/Python" || return
+    cd "$HOME/Library/Python" || return
     latest=$(ls | sort --version-sort | tail -1)
     cd - || return
-    PATH="$(append_if_exists "$PATH" "${HOME}/Library/Python/$latest/bin")"
+    PATH="$(append_if_exists "$PATH" "$HOME/Library/Python/$latest/bin")"
     export PATH
 fi

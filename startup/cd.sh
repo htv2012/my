@@ -7,8 +7,8 @@ CDPATH=$(append_if_exists $CDPATH ..)
 CDPATH=$(append_if_exists "$CDPATH" "$HOME")
 CDPATH=$(append_if_exists "$CDPATH" "$HOME/Sync")
 CDPATH=$(append_if_exists "$CDPATH" "$HOME/workspaces")
-CDPATH=$(append_if_exists "$CDPATH" "$MYENV")
-CDPATH=$(append_if_exists "$CDPATH" "$MYENV/etc")
+CDPATH=$(append_if_exists "$CDPATH" "$HOME/my")
+CDPATH=$(append_if_exists "$CDPATH" "$HOME/my/etc")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/rust-sandbox")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-rust-cli")
@@ -132,7 +132,7 @@ alias cdpath='showpath.py $CDPATH'
 alias cds='cd startup'
 
 # Some destinations
-alias cdm='cd $MYENV'
+alias cdm='cd $HOME/my'
 alias cdw='cd workspaces; ls -l'
 
 cdpy() { # Navigate the python-sandbox dirs

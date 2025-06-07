@@ -26,7 +26,7 @@ def main():
     logging.debug("options=%r", options)
 
     # Use the options.file to come up with a list of candidates
-    boy_dir = pathlib.Path("~/myenv/etc/boy").expanduser()
+    boy_dir = pathlib.Path("~/my/etc/boy").expanduser()
     assert boy_dir.exists()
     candidates = [
         path.name for path in boy_dir.glob("*") if options.file in path.name.lower()

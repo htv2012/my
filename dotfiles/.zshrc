@@ -5,7 +5,7 @@ fi
 
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
-for file in ~/myenv/startup/*.{sh,zsh}
+for file in ~/my/startup/*.{sh,zsh}
 do
     source "$file"
 done
