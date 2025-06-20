@@ -1,7 +1,7 @@
 # ============================================================================
 # Python
 # ============================================================================
-PYTHONSTARTUP=$HOME/my/etc/pythonstartup.py
+#PYTHONSTARTUP=$HOME/my/etc/pythonstartup.py
 export PYTHONSTARTUP
 VENV_ROOT=$HOME/.local/share/venv
 export VENV_ROOT
