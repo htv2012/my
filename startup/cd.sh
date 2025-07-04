@@ -69,7 +69,6 @@ function _find_and_source() {
 cd() {
     _find_and_source .exit.sh
     builtin cd "$@" || return
-    _find_and_source .enter.sh
 
     if cmd_found eza
     then
@@ -82,6 +81,8 @@ cd() {
         cmd="$cmd -l"
     fi
     eval $cmd
+
+    _find_and_source .enter.sh
 }
 
 # cd interactive, $1=root
