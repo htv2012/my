@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+SCRIPT_DIR="${0:A:h}"
+uv run --script "$SCRIPT_DIR/show_make_info.py" "$@"
