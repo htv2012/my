@@ -4,7 +4,7 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "prettytable",
+#     "tabulate",
 # ]
 # ///
 
@@ -16,14 +16,15 @@ import re
 import subprocess
 import tempfile
 
-import prettytable
+import tabulate
 
 
 def print_table(headers, rows):
-    table = prettytable.PrettyTable()
-    table.align = "l"
-    table.field_names = headers
-    table.add_rows(rows)
+    table = tabulate.tabulate(
+        rows,
+        headers=headers,
+        tablefmt="fancy_outline",
+    )
     print(table)
 
 
