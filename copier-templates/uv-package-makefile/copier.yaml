@@ -4,6 +4,6 @@ script:
   help: Script name (see pyproject.toml)
 
 default_target:
-  default: test
+  default: run
   help: Default target (e.g. run, test, or both)
 
