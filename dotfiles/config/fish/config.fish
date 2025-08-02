@@ -1,7 +1,11 @@
 if status is-interactive
+    # Path
     fish_add_path -m /opt/homebrew/bin
 
-    # Commands to run in interactive sessions can go here
+    # General
+    set -gx EDITOR nvim
+    fish_vi_key_bindings --no-erase insert
+
     zoxide init fish | source
 
     # git
