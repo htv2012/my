@@ -1,4 +1,6 @@
 if status is-interactive
+    fish_add_path -m /opt/homebrew/bin
+
     # Commands to run in interactive sessions can go here
     zoxide init fish | source
 
