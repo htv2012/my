@@ -1,6 +1,7 @@
 if status is-interactive
     # Path
     fish_add_path -m /opt/homebrew/bin
+    fish_add_path -m $HOME/.local/bin
 
     # General
     set -gx EDITOR nvim
