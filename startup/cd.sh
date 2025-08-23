@@ -68,7 +68,8 @@ function _find_and_source() {
 # Likewise, executing .exit.sh if exiting
 cd() {
     _find_and_source .exit.sh
-    builtin cd "$@" || return
+
+    z "$@" || builtin cd "$@" || return
 
     if cmd_found eza
     then
