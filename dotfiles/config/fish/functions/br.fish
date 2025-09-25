@@ -1,1 +1,0 @@
-/home/haiv/.local/share/broot/launcher/fish/br.fish
