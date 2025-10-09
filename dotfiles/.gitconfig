@@ -1,6 +1,3 @@
-[core]
-    pager = delta
-
 [color]
     ui = auto
 
@@ -9,15 +6,8 @@
     navigate = true    # use n and N to move between diff sections
     side-by-side = false
 
-    # delta detects terminal colors automatically; set one of these to disable auto-detection
-    # dark = true
-    # light = true
-
 [diff]
     colorMoved = default
-
-[interactive]
-    diffFilter = delta --color-only
 
 [merge]
     conflictstyle = diff3
