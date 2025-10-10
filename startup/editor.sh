@@ -7,7 +7,7 @@ then
     PATH=$(append_if_exists "$PATH" /opt/nvim-linux-x86_64/bin)
 fi
 
-for editor in nvim vim nano
+for editor in vim nano
 do
     if cmd_found $editor
     then
