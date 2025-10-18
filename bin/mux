@@ -1,1 +1,19 @@
-zellij attach || zellij
+#!/usr/bin/env bash
+
+start_tmux() {
+    if [[ $LC_TERMINAL = "iTerm2" ]]
+    then
+        tmux -CC attach || tmux -CC
+    else
+        zellij attach || zellij
+    fi
+}
+
+# ======================================================================
+# main
+# ======================================================================
+host=$(hostname)
+if [[ $host = "debian1" ]]
+then
+    start_tmux
+fi
