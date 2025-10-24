@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 start_tmux() {
+    rm /tmp/start-tmux
     if [[ $LC_TERMINAL = "iTerm2" ]]
     then
         tmux -CC attach || tmux -CC
@@ -16,4 +17,8 @@ host=$(hostname)
 if [[ $host = "debian1" ]]
 then
     start_tmux
+elif [[ $host = "macbookair.local" ]]
+then
+    ssh debian1 "touch /tmp/start-tmux"
+    ssh debian1
 fi
