@@ -20,6 +20,6 @@ then
 elif [[ $host = "macbookair.local" ]]
 then
     remote=${1:-debian1}
-    ssh $(remote) "touch /tmp/start-tmux"
-    ssh $(remote)
+    ssh $remote "touch /tmp/start-tmux"
+    ssh $remote -L9001:localhost:8001
 fi
