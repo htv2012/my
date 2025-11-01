@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+import argparse
+import collections
+import os
+import shutil
+import subprocess
+
+Location = collections.namedtuple("Location", "file,lineno,line")
+
+
+def parse_line(line):
+    fields = [field for field in line.split("|||") if field]
+    loc = Location(fields[0], int(fields[1]), fields[2])
+    return loc
+
+
+def parse_ripgrep_output(raw: str):
+    locs = [parse_line(line) for line in raw.splitlines()]
+    return sorted(set(locs))
+
+
+def menu(locs: list[Location]) -> Location:
+    if (num_choices := len(locs)) == 1:
+        return locs[0]
+    elif num_choices == 0:
+        raise SystemExit("Search term not found")
+
+    print("  0. Exit without edit\n")
+    for i, loc in enumerate(locs, 1):
+        print(f"{i:>3}. {loc.line}\n     {loc.file}({loc.lineno})\n")
+
+    ans = input("Type a number and hit enter: ")
+    try:
+        num = int(ans)
+        if num == 0:
+            raise SystemExit("Exit without editing")
+        return locs[num - 1]
+    except ValueError:
+        raise SystemExit("Not a number")
+
+
+def get_editor():
+    if editor := os.getenv("EDITOR"):
+        return editor
+    for editor in ["vim", "vi"]:
+        if shutil.which(editor):
+            return editor
+    raise SystemExit("No editor found")
+
+
+def edit(loc: Location):
+    editor = get_editor()
+    subprocess.run([editor, f"+{loc.lineno}", loc.file])
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("term")
+    parser.add_argument("-r", "--root", default=".")
+    args = parser.parse_args()
+
+    proc = subprocess.run(
+        [
+            "rg",
+            "--type=python",
+            "--line-number",
+            "--field-match-separator=|||",
+            f"(def|class) {args.term}",
+            args.root,
+        ],
+        text=True,
+        capture_output=True,
+    )
+
+    if proc.stderr:
+        raise SystemExit(proc.stderr)
+
+    locs = parse_ripgrep_output(proc.stdout)
+    loc = menu(locs)
+    edit(loc)
+
+
+if __name__ == "__main__":
+    main()
