@@ -52,6 +52,7 @@ fi
 
 function pyclean() { # Cleans up all python-generated files
     find . -name '*.pyc' -delete
-    find . -name '__pycache__' -delete
+    find . -type d -name '__pycache__' -delete
+    find . -type d -name '.venv' -exec rm -fr {} \;
 }
 
