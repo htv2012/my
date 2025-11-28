@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-import contextlib
 import os
 import pathlib
 import shlex
 import shutil
 import subprocess
+
+import termlib
 
 
 def execute(name: str, path: pathlib.Path):
@@ -33,25 +34,11 @@ def get_runbooks():
     return runbooks
 
 
-def menu(runbooks: dict):
-    names = list(runbooks)
-    for i, name in enumerate(names):
-        print(f"{i:>2}. {name}")
-    print("Enter a number, or Enter to quit")
-
-    while (answer := input("> ").strip()) != "":
-        with contextlib.suppress(ValueError, IndexError):
-            index = int(answer)
-            name = names[index]
-            return name, runbooks[name]
-    return None, None
-
-
 def main():
     runbooks = get_runbooks()
-    name, path = menu(runbooks)
-    if path is not None:
-        execute(name, path)
+    name = termlib.user_select(list(runbooks))
+    if name is not None:
+        execute(name, runbooks[name])
 
 
 if __name__ == "__main__":

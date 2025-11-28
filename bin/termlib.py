@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 import tempfile
+import contextlib
 
 logging.basicConfig(level=os.getenv("LOGLEVEL", "WARNING"))
 LOGGER = logging.getLogger(__name__)
@@ -25,19 +26,15 @@ def user_select(candidates: list[str]) -> str:
             )
             output.seek(0)
             selection = output.read().strip()
+            return selection or None
     except FileNotFoundError:
         # fzf not installed, use a simple selection method
         for i, element in enumerate(candidates):
             print(f"{i:>3} {element}")
         print()
-        index = -1
-        while not (0 <= index < len(candidates)):
-            index = input("Enter a number: ")
-            try:
-                index = int(index)
-            except ValueError:
-                index = -1
-        selection = candidates[index]
 
-    LOGGER.debug("Selected: %r", selection)
-    return selection
+        while (answer := input("> ").strip()) != "":
+            with contextlib.suppress(IndexError, ValueError):
+                index = int(answer)
+                return candidates[index]
+        return None

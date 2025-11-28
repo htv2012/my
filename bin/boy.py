@@ -33,6 +33,8 @@ def main():
     ]
     logging.debug("candidates=%r", candidates)
     filename = termlib.user_select(candidates)
+    if filename is None:
+        return
 
     # Display or edit the file
     file_path = str(boy_dir / filename)
