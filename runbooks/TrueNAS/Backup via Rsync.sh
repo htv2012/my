@@ -25,6 +25,6 @@ cd
 dest=truenas:/mnt/pool1/work/macbookair
 for src in my JoplinBackup Projects
 do
-    rsync -av --delete --exclude '.git/' $src $dest
+    rsync -av --delete --exclude '.git/' --exclude '.ruff_cache' $src $dest
 done
 
