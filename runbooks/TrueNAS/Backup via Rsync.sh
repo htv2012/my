@@ -22,9 +22,15 @@
 # 3. Create a new task
 
 cd
+echo ""
+
 dest=truenas:/mnt/pool1/work/macbookair
 for src in my JoplinBackup Projects
 do
+    echo ""
+    echo ----------------------------------------
+    echo $src
+    echo ----------------------------------------
     rsync -av --delete --exclude '.git/' --exclude '.ruff_cache' $src $dest
 done
 
