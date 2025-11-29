@@ -24,7 +24,7 @@
 cd
 echo ""
 
-dest=truenas:/mnt/pool1/work/macbookair
+dest=truenas:/mnt/pool1/work/$(hostname)/$USER
 for src in my JoplinBackup Projects
 do
     echo ""
