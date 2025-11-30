@@ -1,10 +1,7 @@
+#!/usr/bin/env bash
 # ============================================================================
 # Python
 # ============================================================================
-#PYTHONSTARTUP=$HOME/my/etc/pythonstartup.py
-export PYTHONSTARTUP
-VENV_ROOT=$HOME/.local/share/venv
-export VENV_ROOT
 
 # Tell uv to use this version
 UV_PYTHON=3.13
@@ -15,12 +12,11 @@ alias act='source .venv/bin/activate'
 alias black='ruff format'
 alias isort=' ruff check --select I --fix'
 alias pypath='echo $PYTHONPATH | tr : \\n'
-alias venv-clean="rm -fr ${VENV_ROOT}"
 
 
 make-project() {
     uv init "$@"
-    projectDir="${@: -1}"
+    projectDir="${*: -1}"
     echo "projectDir=$projectDir"
     cd "$projectDir" || exit
     copier copy \
@@ -34,9 +30,9 @@ make-project() {
 nbclean() {  # Clean the Untitled* notebooks
     for root in $HOME/Projects/python_notebooks $HOME/JupyterNotebooks
     do
-        if [ -d $root ]
+        if [ -d "$root" ]
         then
-            find -name 'Untitled*.ipynb' -delete
+            find . -name 'Untitled*.ipynb' -delete
         fi
     done
 }
