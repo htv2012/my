@@ -21,6 +21,14 @@
 # 2. Go to Tasks > Rsync Tasks
 # 3. Create a new task
 
+if [[ $(hostname) != "macbookair.local" ]]
+then
+    echo ""
+    echo "This script does not run on this host."
+    echo ""
+    exit
+fi
+
 cd
 echo ""
 
