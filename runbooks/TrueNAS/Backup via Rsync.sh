@@ -39,6 +39,6 @@ do
     echo ----------------------------------------
     echo $src
     echo ----------------------------------------
-    rsync -av --delete --exclude '.git/' --exclude '.ruff_cache' $src $dest
+    rsync -av --delete --exclude '.git/' --exclude '.ruff_cache' --exclude '.venv' $src $dest
 done
 
