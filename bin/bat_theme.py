@@ -37,7 +37,7 @@ def use_theme(bat_exe: str, theme: str):
 
 
 def main():
-    bat_exe = shutil.which("bat") or shutil.which("batcat")
+    bat_exe = shutil.which("batcat") or shutil.which("bat")
     if bat_exe is None:
         raise SystemExit("bat or batcat not found")
 
