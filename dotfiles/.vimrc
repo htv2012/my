@@ -8,7 +8,7 @@ elseif has('mac')
     colorscheme gruvbox
     set background=dark
 elseif has('unix')
-    colorscheme gruvbox
+    colorscheme snazzy
     set background=dark
 else
     colorscheme pablo
