@@ -69,7 +69,12 @@ function _find_and_source() {
 cd() {
     _find_and_source .exit.sh
 
-    z "$@" || builtin cd "$@" || return
+    if cmd_found z
+    then
+        z "$@" || builtin cd "$@" || return
+    else
+        builtin cd "$@" || builtin cd "$@" || return
+    fi
 
     if cmd_found eza
     then

@@ -13,6 +13,11 @@ then
     export HISTSIZE
     HISTTIMEFORMAT="%F %T  "
     export HISTTIMEFORMAT
+
+    ha() {
+        # History add: Add an entry to history
+        history -s "$@"
+    }
 elif is_zsh
 then
     bindkey '^R' history-incremental-search-backward
@@ -29,6 +34,11 @@ then
     setopt HIST_FIND_NO_DUPS
     setopt HIST_SAVE_NO_DUPS
     setopt appendhistory
+
+    ha() {
+        # History add: Add an entry to history
+        print -s "$@"
+    }
 fi
 
 h() {
