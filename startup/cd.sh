@@ -93,8 +93,10 @@ cd() {
 
 # cd interactive, $1=root
 cdi() {
-    cd "$1" || return
-    cd $( ls -1 -d */ | fzf )
+    local root="${1:-.}"
+    local depth="${2:-1}"
+    local dest=$(find "$root" -maxdepth $depth -type d | grep -F -v '/.' | fzf)
+    cd "$dest"
 }
 
 if is_bash
@@ -134,12 +136,12 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdd='cd ~/Downloads'
-alias cdp='cd $PROJECTSROOT'
+alias cdp='cdi $PROJECTSROOT 3'
 alias cdpath='showpath.py $CDPATH'
 alias cds='cd startup'
 
 # Some destinations
-alias cdm='cd $HOME/my'
+alias cdm='cdi $HOME/my'
 alias cdw='cd workspaces; ls -l'
 
 cdpy() { # Navigate the python-sandbox dirs
