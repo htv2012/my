@@ -10,6 +10,7 @@ export UV_PYTHON
 
 alias act='source .venv/bin/activate'
 alias black='ruff format'
+alias ipython='uvx ipython'
 alias isort=' ruff check --select I --fix'
 alias pypath='echo $PYTHONPATH | tr : \\n'
 
