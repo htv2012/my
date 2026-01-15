@@ -31,6 +31,7 @@ alias branchall='batch_git.py branch'
 alias pullall='batch_git.py pull'
 alias pushall='batch_git.py push'
 alias statusall='batch_git.py status'
+alias ig='uvx invoke -r ~/my/invoke/git'
 
 # Add files in the current dir and commit
 gchere() {
