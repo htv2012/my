@@ -1,6 +1,6 @@
 import pathlib
 
-from invoke import task
+from invoke import task, Context
 
 
 def banner(text: str):
@@ -27,6 +27,12 @@ def list_repos():
     for dir_ in projects.rglob(".git"):
         yield dir_.parent
 
+
+@task
+def pull(c: Context, dir: str ="."):
+    with c.cd(dir):
+        res = c.run("git pull", hide=True)
+        show(dir, res)
 
 @task
 def status(c, dir="."):
