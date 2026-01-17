@@ -76,3 +76,33 @@ x() {  # Touch a file and make it executable
     touch "$@"
     chmod +x "$@"
 }
+
+# Select dir from stdout and go
+_cd_select() {
+    dest=$(sort | uniq | fzf)
+    if [ -n "$dest" ]
+    then
+        cd "$dest" && print -s "cd $PWD"
+    fi
+}
+
+# Go to a directory in history
+cdh(){
+    _cd_select < ~/.config/cd_history.txt
+}
+
+# Go to a bookmarked directory
+cdb() {
+    _cd_select < ~/.config/cd_bookmarks.txt
+}
+
+# Bookmark the current directory
+bm() {
+    {
+        pwd
+        cat ~/.config/cd_bookmarks.txt
+    } | sort | uniq > /tmp/cd_bookmarks.txt
+    mv /tmp/cd_bookmarks.txt ~/.config/cd_bookmarks.txt
+}
+
+
