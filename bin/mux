@@ -14,11 +14,10 @@ start_tmux() {
 # main
 # ======================================================================
 host=$(hostname)
-if [[ $host = "debian1" ]]
+if [ "$host" = "debian1" ]
 then
     start_tmux
-elif [[ $host = "macbookair.local" ]]
-then
+else
     remote=${1:-debian1}
     ssh $remote "touch /tmp/start-tmux"
     ssh $remote -L9001:localhost:8001
