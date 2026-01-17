@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+# whatis: If ll takes up too many lines, do ls
+
+if (( $(ls "$@" | wc -l) > ($LINES - 5) ))
+then
+    ls -FG --color=auto "$@"
+else
+    ls -FGlgh --color=auto "$@"
+fi
