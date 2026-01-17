@@ -190,7 +190,8 @@ cdb() {
 
 # Bookmark the current directory
 bm() {
-    bmFile="${1:-cd_bookmarks.txt}"
+    bmFile="${1:-$HOME/.config/cd_bookmarks.txt}"
+    touch "$bmFile"
     {
         pwd
         cat "$bmFile"
