@@ -89,6 +89,7 @@ cd() {
     eval $cmd
 
     _find_and_source .enter.sh
+    bm ~/.config/cd_history.txt
 }
 
 # cd interactive, $1=root
@@ -138,7 +139,6 @@ alias ......='cd ../../../../..'
 alias cdd='cd ~/Downloads'
 alias cdp='cdi $PROJECTSROOT 3'
 alias cdpath='showpath.py $CDPATH'
-alias cds='cd startup'
 
 # Some destinations
 alias cdm='cdi $HOME/my'
@@ -169,4 +169,32 @@ here() {
 }
 alias there='source $HOME/.local/bin/there'
 
+# Select dir from stdout and go
+_cd_select() {
+    dest=$(sort | uniq | fzf)
+    if [ -n "$dest" ]
+    then
+        cd "$dest" && print -s "cd $PWD"
+    fi
+}
+
+# Go to a directory in history
+cdh(){
+    _cd_select < ~/.config/cd_history.txt
+}
+
+# Go to a bookmarked directory
+cdb() {
+    _cd_select < ~/.config/cd_bookmarks.txt
+}
+
+# Bookmark the current directory
+bm() {
+    bmFile="${1:-cd_bookmarks.txt}"
+    {
+        pwd
+        cat "$bmFile"
+    } | sort | uniq > /tmp/cd_bookmarks.txt
+    mv /tmp/cd_bookmarks.txt "$bmFile"
+}
 
