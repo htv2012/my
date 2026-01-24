@@ -14,15 +14,5 @@ then
     )
 elif is_zsh
 then
-    autoload -Uz vcs_info
-    precmd_vcs_info() { vcs_info }
-    precmd_functions+=( precmd_vcs_info )
-    setopt prompt_subst
-    RPROMPT='${vcs_info_msg_0_}'
-    # %r=root, %b=branch, %u=unstaged changes
-    zstyle ':vcs_info:git:*' formats "[%r:%b:%u]"
-
-    PROMPT="
-%F{yellow}%n@%m %F{green}%8~%F{red}%(?.. !%?)
-%F{green}%#%f "
+    PROMPT=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
 fi
