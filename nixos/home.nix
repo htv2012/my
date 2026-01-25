@@ -196,6 +196,15 @@
 
       initContent = ''
         PROMPT=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
+
+        startupDir=$HOME/my/startup
+        if [ -d "$startupDir" ]
+        then
+          for script in "$startupDir/*.sh"
+          do
+            test -f "$script" && source "$script"
+          done
+        fi
       '';
 
       shellAliases = {
