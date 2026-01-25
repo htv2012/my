@@ -204,6 +204,11 @@
         lla = "ll -A";
         lld = "ll -d";
 
+        ga = "git add";
+        gc = "git commit";
+        gd = "git diff";
+        gs = "git status";
+
         path = "tr : $'\n' <<< $PATH";
       };
     };
