@@ -195,7 +195,7 @@
       enableCompletion = true;
 
       initContent = ''
-        PROMPT=$'\n'"%{$(tput setaf 196)%}%n%{$(tput setaf 202)%}@%{$(tput setaf 208)%}%m %{$(tput setaf 220)%}%1~ %{$(tput sgr0)%}"$'\n'"$ "
+        PROMPT=$'\n'"%{$(tput setaf 196)%}%n%{$(tput setaf 202)%}@%{$(tput setaf 208)%}%m %{$(tput setaf 220)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
 
         startupDir=$HOME/my/startup
         if [ -d "$startupDir" ]
