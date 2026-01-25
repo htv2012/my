@@ -71,6 +71,10 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable System76 power management
+  services.power-profiles-daemon.enable = false;
+  hardware.system76.power-daemon.enable = true;
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -95,7 +99,9 @@
     isNormalUser = true;
     description = "Hai Vu";
     extraGroups = [
+      "adm"
       "networkmanager"
+      "video"
       "wheel"
     ];
     packages = with pkgs; [
@@ -117,6 +123,7 @@
     pkgs._1password-gui
     pkgs.alacritty
     pkgs.bat
+    pkgs.brightnessctl
     pkgs.bruno
     pkgs.bruno-cli
     pkgs.curl
