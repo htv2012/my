@@ -207,6 +207,8 @@
         ga = "git add";
         gc = "git commit";
         gd = "git diff";
+        gl = "git pull";
+        gp = "git push";
         gs = "git status";
 
         path = "tr : $'\n' <<< $PATH";
