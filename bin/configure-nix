@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+#
+# Configure NixOS
+#
+set -e
+sudo vim -p /etc/nixos/{home,configuration}.nix
+sudo nixfmt /etc/nixos/{home,configuration}.nix
+sudo nixos-rebuild switch
+
+#
+# Commit
+#
+cd ~/my/nixos
+cp /etc/nixos/{home,configuration}.nix .
+git add .
+git commit
+
