@@ -199,6 +199,16 @@
       '';
 
       shellAliases = {
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
+        "....." = "cd ../../../..";
+        cdd = "cd ~/Downloads";
+        cdp = "cd ~/Projects";
+        cdm = "cd ~/my";
+
+        zed = "zeditor";
+
         ls = "eza";
         ll = "ls -l";
         lla = "ll -A";
