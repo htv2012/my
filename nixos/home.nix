@@ -195,7 +195,7 @@
       enableCompletion = true;
 
       initContent = ''
-        PROMPT=export PS1=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}$'\n'$ "
+        PROMPT=export PS1=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
 
         startupDir=$HOME/my/startup
         if [ -d "$startupDir" ]
