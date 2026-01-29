@@ -15,4 +15,5 @@ then
 elif is_zsh
 then
     PROMPT=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
+    PROMPT=export PS1="%{$(tput setaf 196)%}%n%{$(tput setaf 202)%}@%{$(tput setaf 208)%}%m %{$(tput setaf 220)%}%~ %{$(tput sgr0)%}$ "
 fi
