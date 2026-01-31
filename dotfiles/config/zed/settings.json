@@ -13,19 +13,32 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/haiv"],
+          "paths": [
+            "/home/haiv"
+          ]
         },
         {
-          "paths": ["/home/haiv/Projects"],
+          "paths": [
+            "/home/haiv/Projects"
+          ]
         },
         {
-          "paths": ["/home/haiv/Projects/pytest-sandbox/./"],
+          "paths": [
+            "/home/haiv/Projects/pytest-sandbox/./"
+          ]
         },
         {
-          "paths": ["/home/haiv/Projects/python-sandbox/./"],
+          "paths": [
+            "/home/haiv/Projects/python-sandbox/./"
+          ]
         },
-      ],
-    },
+        {
+          "paths": [
+            "/home/haiv/my"
+          ]
+        }
+      ]
+    }
   ],
   "vim_mode": true,
   "icon_theme": "Zed (Default)",
