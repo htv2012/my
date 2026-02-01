@@ -8,3 +8,10 @@ dependencies = [
     "fabric>=3.2.2",
     "invoke>=2.2.1",
 ]
+
+[dependency-groups]
+dev = [
+    "ipython>=9.9.0",
+    "ruff>=0.14.14",
+    "ty>=0.0.14",
+]
