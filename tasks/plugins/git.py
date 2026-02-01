@@ -19,7 +19,6 @@ def ls(c: Connection):
     for repo in iter_repos(c):
         print(repo)
 
-
 @task
 def branch(c: Connection):
     banner("Branch")
