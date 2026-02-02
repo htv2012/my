@@ -6,7 +6,8 @@ from tools import banner
 
 
 def iter_repos(c: Connection):
-    roots = (pathlib.Path(p).expanduser() for p in ["~", "~/Projects"])
+    roots = ["~", "~/Projects", "~/code", "~/temp", "~/workspaces"]
+    roots = (p for d in roots if (p := pathlib.Path(d).expanduser()).is_dir())
     all_dirs = (p for root in roots for p in root.glob("*"))
     repos = (path for path in all_dirs if (path / ".git").is_dir())
     yield from repos
@@ -17,6 +18,7 @@ def ls(c: Connection):
     banner("Repositories")
     for repo in iter_repos(c):
         print(repo)
+
 
 @task
 def branch(c: Connection):
@@ -31,3 +33,19 @@ def branch(c: Connection):
     print("-" * max_width, "------")
     for repo, branch_name in branch.items():
         print(f"{repo:<{max_width}} {branch_name}")
+
+
+@task
+def pull(c: Connection):
+    for repo in iter_repos(c):
+        banner(repo)
+        c.run("git pull")
+
+@task
+def status(c: Connection):
+    for repo in iter_repos(c):
+        with c.cd(repo):
+            res = c.run("git status --porcelain", hide=True)
+        if res.stdout:
+            banner(repo)
+            print(res.stdout)
