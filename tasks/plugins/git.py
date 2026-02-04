@@ -41,6 +41,7 @@ def pull(c: Connection):
         banner(repo)
         c.run("git pull")
 
+
 @task
 def status(c: Connection):
     for repo in iter_repos(c):

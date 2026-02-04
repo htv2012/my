@@ -10,3 +10,4 @@ eod(){
     pushall
 }
 
+alias t='fab -r $HOME/my/tasks'
