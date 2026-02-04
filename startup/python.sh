@@ -15,7 +15,7 @@ alias isort=' ruff check --select I --fix'
 alias pypath='echo $PYTHONPATH | tr : \\n'
 
 
-make-project() {
+create-project() {
     uv init "$@"
     projectDir="${*: -1}"
     echo "projectDir=$projectDir"
