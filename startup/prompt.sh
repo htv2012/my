@@ -14,6 +14,6 @@ then
     )
 elif is_zsh
 then
-    PROMPT=$'\n'"%{$(tput setaf 39)%}%n%{$(tput setaf 45)%}@%{$(tput setaf 51)%}%m %{$(tput setaf 195)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
-    PROMPT="%{$(tput setaf 196)%}%n%{$(tput setaf 202)%}@%{$(tput setaf 208)%}%m %{$(tput setaf 220)%}%~ %{$(tput sgr0)%}"$'\n'"$ "
+    start=196
+    PROMPT="%{$(tput setaf $start)%}%n%{$(tput setaf $((start + 6)))%}@%{$(tput setaf $((start + 12)))%}%m %{$(tput setaf $((start + 18)))%}%~ %{$(tput sgr0)%}"$'\n'"$ "
 fi
