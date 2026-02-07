@@ -34,6 +34,11 @@
         },
         {
           "paths": [
+            "/home/haiv/Projects/python-sandbox/3party/click/json-type/./"
+          ]
+        },
+        {
+          "paths": [
             "/home/haiv/my"
           ]
         }
