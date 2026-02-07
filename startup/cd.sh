@@ -92,12 +92,22 @@ cd() {
     bm ~/.config/cd_history.txt
 }
 
-# cd interactive, $1=root
+
+# Go to a sub dir off the current dir
 cdi() {
-    local root="${1:-.}"
-    local depth="${2:-1}"
-    local dest=$(find "$root" -maxdepth $depth -type d | grep -F -v '/.' | fzf)
-    cd "$dest"
+    get-dirs.sh "$1" "$2"
+    cd $(cat /tmp/get-dirs.out)
+}
+
+# cd a root dir, and optionally select a sub dir
+cdroot() {
+    # $1=root dir, $2=filter
+    if [ -n "$2" ]
+    then
+        cdi "$1" "$2"
+    else
+        cd "$1"
+    fi
 }
 
 if is_bash
@@ -141,7 +151,7 @@ alias cdp='cdi $PROJECTSROOT 3'
 alias cdpath='showpath.py $CDPATH'
 
 # Some destinations
-alias cdm='cdi $HOME/my'
+alias cdm='cdroot $HOME/my'
 alias cdw='cd workspaces; ls -l'
 
 cdpy() { # Navigate the python-sandbox dirs
