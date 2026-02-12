@@ -25,6 +25,6 @@ then
     zstyle ':vcs_info:git:*' formats '[%b] '
 
     # 4. Your updated prompt
-    start=196
-    PROMPT=$'\n'"%? $(tput setaf $start)\${vcs_info_msg_0_}%{$(tput setaf $((start + 6)))%}%n%{$(tput setaf $((start + 12)))%}@%{$(tput setaf $((start + 18)))%}%m %{$(tput setaf $((start + 24)))%}%~ %{$(tput sgr0)%}"$'\n'"%# "
+    start=202
+    PROMPT=$'\n'"%? $(tput setaf $start)\${vcs_info_msg_0_}%{$(tput setaf $((start + 6)))%}%n%{$(tput setaf $((start + 6)))%}@%{$(tput setaf $((start + 6)))%}%m %{$(tput setaf $((start + 12)))%}%~ %{$(tput sgr0)%}"$'\n'"%# "
 fi
