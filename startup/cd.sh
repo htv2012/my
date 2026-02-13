@@ -93,18 +93,13 @@ cd() {
 }
 
 
-# Go to a sub dir off the current dir
-cdi() {
-    get-dirs.sh "$1" "$2"
-    cd $(cat /tmp/get-dirs.out)
-}
-
 # cd a root dir, and optionally select a sub dir
 cdroot() {
     # $1=root dir, $2=filter
     if [ -n "$2" ]
     then
-        cdi "$1" "$2"
+        get-dirs.sh "$1" "$2"
+        cd $(cat /tmp/get-dirs.out)
     else
         cd "$1"
     fi
@@ -147,7 +142,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdd='cd ~/Downloads'
-alias cdp='cdi $PROJECTSROOT 3'
+alias cdp='cdroot $PROJECTSROOT'
 alias cdpath='showpath.py $CDPATH'
 
 # Some destinations
