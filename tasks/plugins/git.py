@@ -6,7 +6,7 @@ from tools import banner
 
 
 def iter_repos(c: Connection):
-    roots = ["~", "~/Projects", "~/code", "~/temp", "~/workspaces"]
+    roots = ["~", "~/Projects", "~/code"]
     roots = (p for d in roots if (p := pathlib.Path(d).expanduser()).is_dir())
     all_dirs = (p for root in roots for p in root.glob("*"))
     repos = (path for path in all_dirs if (path / ".git").is_dir())
