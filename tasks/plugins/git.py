@@ -43,6 +43,13 @@ def pull(c: Connection):
 
 
 @task
+def push(c: Connection):
+    for repo in iter_repos(c):
+        banner(repo)
+        c.run("git push")
+
+
+@task
 def status(c: Connection):
     for repo in iter_repos(c):
         with c.cd(repo):
