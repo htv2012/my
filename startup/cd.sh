@@ -10,6 +10,14 @@ CDPATH=$(append_if_exists "$CDPATH" "$HOME/workspaces")
 CDPATH=$(append_if_exists "$CDPATH" "$HOME/my")
 CDPATH=$(append_if_exists "$CDPATH" "$HOME/my/etc")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/3party")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/books")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/LICENSE")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/stdlib")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/tools")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/topics")
+CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-sandbox/wip")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/rust-sandbox")
 CDPATH=$(append_if_exists "$CDPATH" "$PROJECTSROOT/python-rust-cli")
 CDPATH=$(append_if_exists "$CDPATH" "$SYNODRIVE")
@@ -19,35 +27,7 @@ CDPATH=$(append_if_exists "$CDPATH" "/media/$USER")
 CDPATH=$(append_if_exists "$CDPATH" /mnt)
 CDPATH=$(append_if_exists "$CDPATH" /Volumes)
 CDPATH=$(append_if_exists "$CDPATH" /Volumes/Lexar/$HOST)
-
 export CDPATH
-
-if [ -d "${PROJECTSROOT}/python-sandbox" ]
-then
-    for subdir in ${PROJECTSROOT}/python-sandbox "${PROJECTSROOT}/python-sandbox/"*
-    do
-        if [ -d "$subdir" ]
-        then
-            CDPATH=$(append_if_exists "$CDPATH" "$subdir")
-        fi
-    done
-fi
-
-if [ -d "${PROJECTSROOT}/pytest-sandbox/src" ]
-then
-    CDPATH=$(append_if_exists "$CDPATH" "${PROJECTSROOT}/pytest-sandbox/src")
-fi
-
-if [ -d "${PROJECTSROOT}/interview-questions" ]
-then
-    for subdir in "${PROJECTSROOT}/interview-questions/"*
-    do
-        if [ -d "$subdir" ]
-        then
-            CDPATH=$(append_if_exists "$CDPATH" "$subdir")
-        fi
-    done
-fi
 
 
 function _find_and_source() {
