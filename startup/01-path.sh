@@ -86,6 +86,7 @@ PATH=$(append_if_exists "$PATH" "/opt/homebrew/sbin")
 PATH="$(append_if_exists "$PATH" "$HOME/Applications/nvim-macos/bin")"
 PATH="$(append_if_exists "$PATH" "$HOME/.cargo/bin")"
 PATH="$(append_if_exists "$PATH" "$HOME/.local/bin")"
+PATH="$(append_if_exists "$PATH" "$HOME/.local/zed")"
 PATH="$(append_if_exists "$PATH" "$HOME/local-bin")"
 PATH="$(append_if_exists "$PATH" "$HOME/.local/node/bin")"
 PATH="$(append_if_exists "$PATH" "$HOME/.poetry/bin")"
