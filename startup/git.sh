@@ -295,3 +295,10 @@ alias glum='git pull upstream master'
 
 alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
+
+alias ggb='t git.branch'
+alias ggls='t git.ls'
+alias ggl='t git.pull'
+alias ggp='t git.push'
+alias ggs='t git.status'
+
