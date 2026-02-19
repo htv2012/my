@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Run a single-file go module
+set -e
+
+src="${1:?Please supply a Go file.}"
+exe="./bin/${1%.go}"
+
+mkdir -p ./bin
+
+go fmt "$src"
+go vet "$src"
+go build -o "$exe" "$src"
+"$exe"
