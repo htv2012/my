@@ -153,8 +153,6 @@ alias gfo='git fetch origin'
 
 alias gfg='git ls-files | grep'
 
-alias gg='git gui citool'
-alias gga='git gui citool --amend'
 
 ggf() {
   [[ "$#" != 1 ]] && local b="$(git_current_branch)"
@@ -296,6 +294,7 @@ alias glum='git pull upstream master'
 alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
 
+alias gga='alias|grep "t git\."'
 alias ggb='t git.branch'
 alias ggls='t git.ls'
 alias ggl='t git.pull'
