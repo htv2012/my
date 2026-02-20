@@ -6,23 +6,37 @@ from tools import banner
 
 
 def iter_repos(c: Connection):
-    roots = ["~", "~/Projects", "~/code"]
-    roots = (p for d in roots if (p := pathlib.Path(d).expanduser()).is_dir())
-    all_dirs = (p for root in roots for p in root.glob("*"))
-    repos = (path for path in all_dirs if (path / ".git").is_dir())
-    yield from repos
+    repos = []
+    for d in ["~", "~/Projects"]:
+        res = c.run(
+            f"find {d} -mindepth 2 -maxdepth 2 -type d -name .git", hide=True, warn=True
+        )
+        for p in res.stdout.strip().splitlines():
+            repos.append(pathlib.Path(p).parent)
+    return repos
+
+
+def execute(c: Connection, cmd: str, repo: str, predicate):
+    with c.cd(repo):
+        res = c.run(cmd, hide=True, warn=True)
+    if predicate(res):
+        banner(c, repo)
+        if res.stderr:
+            print(res.stderr.strip())
+            print("---")
+        print(res.stdout)
 
 
 @task
 def ls(c: Connection):
-    banner("Repositories")
+    banner(c, "Repositories")
     for repo in iter_repos(c):
         print(repo)
 
 
 @task
 def branch(c: Connection):
-    banner("Branch")
+    banner(c, "Branch")
     branch = {}
     for repo in iter_repos(c):
         with c.cd(repo):
@@ -38,22 +52,16 @@ def branch(c: Connection):
 @task
 def pull(c: Connection):
     for repo in iter_repos(c):
-        banner(repo)
-        c.run("git pull")
+        execute(c, "git pull", repo, lambda res: "up to date" not in res.stdout)
 
 
 @task
 def push(c: Connection):
     for repo in iter_repos(c):
-        banner(repo)
-        c.run("git push")
+        execute(c, "git push", repo, lambda res: "up-to-date" not in res.stderr)
 
 
 @task
 def status(c: Connection):
     for repo in iter_repos(c):
-        with c.cd(repo):
-            res = c.run("git status --porcelain", hide=True)
-        if res.stdout:
-            banner(repo)
-            print(res.stdout)
+        execute(c, "git status --porcelain", repo, lambda res: res.stdout)
