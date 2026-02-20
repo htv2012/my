@@ -122,6 +122,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdd='cd ~/Downloads'
+alias cdg='cdroot $PROJECTSROOT/go-sandbox'
 alias cdp='cdroot $PROJECTSROOT'
 alias cdpath='showpath.py $CDPATH'
 
