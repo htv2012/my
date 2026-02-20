@@ -10,4 +10,14 @@ mkdir -p ./bin
 go fmt "$src"
 go vet "$src"
 go build -o "$exe" "$src"
+
+echo "Source:"
+echo "\`\`\`"
+bat "$src"
+echo "\`\`\`"
+
+echo ""
+echo "Output:"
+echo "\`\`\`"
 "$exe"
+echo "\`\`\`"
