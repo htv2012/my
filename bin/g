@@ -3,9 +3,8 @@
 set -e
 
 src="${1:?Please supply a Go file.}"
-exe="./bin/${1%.go}"
+exe="/tmp/bin/${1%.go}"
 
-mkdir -p ./bin
 
 go fmt "$src"
 go vet "$src"
