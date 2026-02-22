@@ -12,7 +12,7 @@ go build -o "$exe" "$src"
 
 echo "Source:"
 echo "\`\`\`"
-bat "$src"
+bat --paging never "$src"
 echo "\`\`\`"
 
 echo ""
