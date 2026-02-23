@@ -1,13 +1,24 @@
 #!/bin/sh
 
+
+t() {
+    fab -r $HOME/my/tasks "$@"
+}
+
 # Start work session
 hi(){
-    pullall
+    t git.pull
 }
 
 # Finished work session
 eod(){
-    pushall
+    t git.push
 }
 
-alias t='fab -r $HOME/my/tasks'
+
+alias tgb='t git.branch'
+alias tgls='t git.ls'
+alias tgl='t git.pull'
+alias tgp='t git.push'
+alias tgs='t git.status'
+
