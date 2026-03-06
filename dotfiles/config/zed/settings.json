@@ -49,10 +49,30 @@
       "language_servers": ["ty", "!basedpyright"],
     },
     "Go": {
+      "code_actions_on_format": {
+        "source.organizeImports": true,
+      },
       "tab_size": 8, // Standard Go visual width is 8, but 4 is common
       "hard_tabs": true, // This is the critical setting for Go
       "format_on_save": "on",
       "formatter": "language_server",
+    },
+  },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true,
+        },
+        "ui.completion.usePlaceholders": true,
+        "ui.diagnostic.staticcheck": true,
+      },
     },
   },
 }
