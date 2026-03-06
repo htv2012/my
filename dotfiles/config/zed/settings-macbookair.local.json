@@ -5,27 +5,27 @@
       "args": [],
       "projects": [
         {
-          "paths": ["/home/haiv"]
+          "paths": ["/home/haiv"],
         },
         {
-          "paths": ["/home/haiv/Projects"]
+          "paths": ["/home/haiv/Projects"],
         },
         {
-          "paths": ["/home/haiv/Projects/pytest-sandbox/./"]
+          "paths": ["/home/haiv/Projects/pytest-sandbox/./"],
         },
         {
-          "paths": ["/home/haiv/Projects/python-sandbox/./"]
+          "paths": ["/home/haiv/Projects/python-sandbox/./"],
         },
         {
           "paths": [
-            "/home/haiv/Projects/python-sandbox/3party/click/json-type/./"
-          ]
+            "/home/haiv/Projects/python-sandbox/3party/click/json-type/./",
+          ],
         },
         {
-          "paths": ["/home/haiv/my"]
-        }
-      ]
-    }
+          "paths": ["/home/haiv/my"],
+        },
+      ],
+    },
   ],
   "vim_mode": true,
   "icon_theme": "Zed (Default)",
@@ -34,21 +34,20 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "One Dark",
   },
   "languages": {
     "Python": {
-      "language_servers": ["ty", "!basedpyright"]
+      "language_servers": ["ty", "!basedpyright"],
     },
     "Go": {
       "code_actions_on_format": {
-        "source.organizeImports": true
+        "source.organizeImports": true,
       },
       "tab_size": 8,
       "hard_tabs": true,
-Extra data: line 1 column 23 (char 22)
-      "formatter": "language_server"
-    }
+      "formatter": "language_server",
+    },
   },
   "lsp": {
     "gopls": {
@@ -60,11 +59,11 @@ Extra data: line 1 column 23 (char 22)
           "constantValues": true,
           "functionTypeParameters": true,
           "parameterNames": true,
-          "rangeVariableTypes": true
+          "rangeVariableTypes": true,
         },
         "ui.completion.usePlaceholders": true,
-        "ui.diagnostic.staticcheck": true
-      }
-    }
-  }
+        "ui.diagnostic.staticcheck": true,
+      },
+    },
+  },
 }
