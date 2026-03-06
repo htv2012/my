@@ -95,6 +95,7 @@ PATH="$(append_if_exists "$PATH" $HOME/my/usr/bin)"
 PATH="$(append_if_exists "$PATH" "/Applications/Visual Studio Code.app/Contents/Resources/app/bin")"
 PATH="$(append_if_exists "$PATH" "/opt/nvim-linux64/bin")"
 PATH="$(append_if_exists "$PATH" /usr/local/go/bin)"
+PATH="$(append_if_exists "$PATH" $HOME/go/bin)"
 PATH="$(append_if_exists "$PATH" $HOME/.local/zig)"
 export PATH
 
