@@ -1,0 +1,70 @@
+{
+  "ssh_connections": [
+    {
+      "host": "debian1",
+      "args": [],
+      "projects": [
+        {
+          "paths": ["/home/haiv"]
+        },
+        {
+          "paths": ["/home/haiv/Projects"]
+        },
+        {
+          "paths": ["/home/haiv/Projects/pytest-sandbox/./"]
+        },
+        {
+          "paths": ["/home/haiv/Projects/python-sandbox/./"]
+        },
+        {
+          "paths": [
+            "/home/haiv/Projects/python-sandbox/3party/click/json-type/./"
+          ]
+        },
+        {
+          "paths": ["/home/haiv/my"]
+        }
+      ]
+    }
+  ],
+  "vim_mode": true,
+  "icon_theme": "Zed (Default)",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["ty", "!basedpyright"]
+    },
+    "Go": {
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      },
+      "tab_size": 8,
+      "hard_tabs": true,
+Extra data: line 1 column 23 (char 22)
+      "formatter": "language_server"
+    }
+  },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        },
+        "ui.completion.usePlaceholders": true,
+        "ui.diagnostic.staticcheck": true
+      }
+    }
+  }
+}
