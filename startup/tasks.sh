@@ -16,9 +16,3 @@ eod(){
 }
 
 
-alias tgb='t git.branch'
-alias tgls='t git.ls'
-alias tgl='t git.pull'
-alias tgp='t git.push'
-alias tgs='t git.status'
-

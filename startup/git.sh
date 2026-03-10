@@ -35,7 +35,7 @@ alias ig='uvx invoke -r ~/my/invoke/git'
 
 # Add files in the current dir and commit
 gchere() {
-    git add . && git commit -m "${1:-Add} $(basename "$PWD")" && git push
+    git add . && git commit -m "${1:-feat: add} $(basename "$PWD")" && git push
 }
 
 # Check out main or master
@@ -295,9 +295,9 @@ alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
 
 alias gga='alias|grep "t git\."'
-alias ggb='t git.branch'
-alias ggls='t git.ls'
-alias ggl='t git.pull'
-alias ggp='t git.push'
-alias ggs='t git.status'
+alias tgb='t git.branch'
+alias tgls='t git.ls'
+alias tgl='t git.pull'
+alias tgp='t git.push'
+alias tgs='t git.status'
 
