@@ -11,12 +11,8 @@ go vet "$src"
 go build -o "$exe" "$src"
 
 echo "Source:"
-echo "\`\`\`"
-bat --paging never "$src"
-echo "\`\`\`"
+bat -n --tabs=8 --paging never "$src"
 
 echo ""
 echo "Output:"
-echo "\`\`\`"
 "$exe"
-echo "\`\`\`"
