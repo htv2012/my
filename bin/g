@@ -8,6 +8,12 @@ exe="/tmp/bin/${1%.go}"
 
 go fmt "$src"
 go vet "$src"
+
+if which staticcheck > /dev/null 2> /dev/null
+then
+    staticcheck "$src"
+fi
+
 go build -o "$exe" "$src"
 
 echo "Source:"
