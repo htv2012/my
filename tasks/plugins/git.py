@@ -16,15 +16,15 @@ def iter_repos(c: Connection):
     return repos
 
 
-def execute(c: Connection, cmd: str, repo: str, predicate):
+def execute(c: Connection, cmd: str, repo: str):
+    banner(c, repo)
     with c.cd(repo):
         res = c.run(cmd, hide=True, warn=True)
-    if predicate(res):
-        banner(c, repo)
-        if res.stderr:
-            print(res.stderr.strip())
-            print("---")
-        print(res.stdout)
+
+    if res.stderr:
+        print(res.stderr.strip())
+        print("---")
+    print(res.stdout)
 
 
 @task
@@ -52,16 +52,16 @@ def branch(c: Connection):
 @task
 def pull(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git pull", repo, lambda res: "up to date" not in res.stdout)
+        execute(c, "git pull", repo)
 
 
 @task
 def push(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git push", repo, lambda res: "up-to-date" not in res.stderr)
+        execute(c, "git push", repo)
 
 
 @task
 def status(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git status --porcelain", repo, lambda res: res.stdout)
+        execute(c, "git status --porcelain", repo)
