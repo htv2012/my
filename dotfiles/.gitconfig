@@ -9,6 +9,9 @@
 [diff]
     colorMoved = default
 
+[init]
+    defaultBranch = main
+
 [merge]
     conflictstyle = diff3
 
@@ -21,4 +24,3 @@
 [user]
 	email = haivu2004@gmail.com
 	name = Hai Vu
-
