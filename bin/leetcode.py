@@ -171,7 +171,8 @@ def extract_details(url: str, dump: Optional[str]) -> dict:
             json.dump(response_json, stream, indent=4)
     question = response_json["data"]["question"]
 
-    details["dir"] = f"{question['questionFrontendId']}. {question['title']}"
+    title = question["title"].lower().replace(" ", "_")
+    details["dir"] = f"leetcode_{question['questionFrontendId']}_{title}"
 
     buffer = io.StringIO()
     for snippet in question["codeSnippets"]:
@@ -232,7 +233,7 @@ def main():
         "-r",
         "--root",
         type=pathlib.Path,
-        default=pathlib.Path("~/Projects/leetcode").expanduser(),
+        default=pathlib.Path("~/Projects/interview-questions/leetcode").expanduser(),
     )
     parser.add_argument("-d", "--dump")
     parser.add_argument("url")
