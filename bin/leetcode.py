@@ -71,6 +71,8 @@ QUERY = """query questionData($titleSlug: String!) {
     enableTestMode
     envInfo
     libraryUrl
+    exampleTestcases
+    sampleTestCase
     __typename
   }
 }
@@ -179,7 +181,7 @@ def extract_details(url: str, dump: Optional[str]) -> dict:
     question = response_json["data"]["question"]
 
     title = question["title"].lower().replace(" ", "_")
-    details["dir"] = f"leetcode_{question['questionFrontendId']}_{title}"
+    details["dir"] = f"leetcode_{question['questionFrontendId']:>04}_{title}"
 
     buffer = io.StringIO()
     for snippet in question["codeSnippets"]:
