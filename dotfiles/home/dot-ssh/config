@@ -8,3 +8,11 @@ Host debian1
     User haiv
     SetEnv TERM=xterm-256color
     LocalForward 9001 localhost:8001
+
+Host truenas
+    HostName truenas.local
+    User haiv
+    SetEnv TERM=xterm-256color
+
+Host nuc
+    SetEnv TERM=xterm-256color
