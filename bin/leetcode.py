@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "bs4>=0.0.2",
+#     "requests>=2.34.2",
+# ]
+# ///
 import argparse
 import io
 import json
