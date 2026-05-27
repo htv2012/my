@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+import pathlib
+import re
+import socket
+import subprocess
+
+
+def main():
+    local_roots = [
+        "~/Downloads",
+        "~/JoplinBackup",
+        "~/Music",
+        "~/my",
+        "~/Photos",
+        "~/Projects",
+        "~/Sync",
+        "~/workspaces",
+    ]
+    local_host = re.sub(r"\..+$", "", socket.gethostname()).lower()
+    remote_roots = [f"truenas.local:~/Arc/{local_host}"]
+
+    cmd_template = (
+        "rsync --archive --verbose --compress --partial --progress --checksum".split()
+    )
+
+    for local_root in local_roots:
+        local_root = pathlib.Path(local_root).expanduser()
+        for remote_root in remote_roots:
+            print(f"\n#\n# Back up {local_root} to {remote_root}\n#")
+            cmd = cmd_template + [str(local_root), remote_root]
+            subprocess.run(cmd, check=False)
+
+
+if __name__ == "__main__":
+    main()
