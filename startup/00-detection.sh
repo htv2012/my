@@ -35,6 +35,10 @@ is_linux() {  # Detects Linux
     test "$kernel_name" = "Linux"
 }
 
+is_bsd() {  # Detects FreeBSD
+    test "$kernel_name" = "FreeBSD"
+}
+
 is_kitty() {  # Detects kitty terminal
     test -n "$KITTY_WINDOW_ID"
 }
