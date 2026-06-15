@@ -9,6 +9,9 @@ case "$kernel_name" in
     Linux)
         shell_name=$(basename "$SHELL")
         ;;
+    FreeBSD)
+        shell_name=$(basename "$SHELL")
+        ;;
 esac
 
 
