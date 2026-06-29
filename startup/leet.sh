@@ -4,7 +4,7 @@ cpsolution() {
 }
 
 cdleet() {
-    cd leetcode || return
+    builtin cd leetcode || return
     cd *"$1"* 2> /dev/null || return
 }
 
