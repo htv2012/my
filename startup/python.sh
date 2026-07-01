@@ -13,6 +13,7 @@ alias black='ruff format'
 alias ipython='uvx ipython'
 alias isort=' ruff check --select I --fix'
 alias pypath='echo $PYTHONPATH | tr : \\n'
+alias uvt='uv tree -d1'
 
 
 create-project() {
