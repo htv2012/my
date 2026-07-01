@@ -64,4 +64,13 @@ def push(c: Connection):
 @task
 def status(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git status --porcelain", repo)
+        # execute(c, "git status --porcelain", repo)
+        with c.cd(repo):
+            res = c.run("git status --porcelain", hide=True, warn=True)
+
+        if res.stderr or res.stdout:
+            banner(c, repo)
+        if res.stderr:
+            print(res.stderr)
+        if res.stdout:
+            print(res.stdout)
