@@ -1,6 +1,7 @@
 import pathlib
 
 from fabric import Connection, task
+from invoke.runners import Result
 
 from tools import banner
 
@@ -8,23 +9,19 @@ from tools import banner
 def iter_repos(c: Connection):
     repos = []
     for d in ["~", "~/Projects"]:
-        res = c.run(
+        result = c.run(
             f"find {d} -mindepth 2 -maxdepth 2 -type d -name .git", hide=True, warn=True
         )
-        for p in res.stdout.strip().splitlines():
+        for p in result.stdout.strip().splitlines():
             repos.append(pathlib.Path(p).parent)
     return repos
 
 
-def execute(c: Connection, cmd: str, repo: str):
-    banner(c, repo)
-    with c.cd(repo):
-        res = c.run(cmd, hide=True, warn=True)
-
-    if res.stderr:
-        print(res.stderr.strip())
-        print("---")
-    print(res.stdout)
+def print_result(result: Result):
+    if result.stderr:
+        print(result.stderr)
+    if result.stdout:
+        print(result.stdout)
 
 
 @task
@@ -40,8 +37,8 @@ def branch(c: Connection):
     branch = {}
     for repo in iter_repos(c):
         with c.cd(repo):
-            res = c.run("git branch --show-current", hide=True)
-            branch[str(repo)] = res.stdout.strip()
+            result = c.run("git branch --show-current", hide=True)
+            branch[str(repo)] = result.stdout.strip()
     max_width = max(map(len, branch))
     print("Repo".ljust(max_width), "Branch")
     print("-" * max_width, "------")
@@ -52,24 +49,33 @@ def branch(c: Connection):
 @task
 def pull(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git pull", repo)
+        with c.cd(repo):
+            result = c.run("git pull", hide=True, warn=True)
+            if "Already up to date" in result.stdout:
+                continue
+
+            banner(c, repo)
+            print_result(result)
 
 
 @task
 def push(c: Connection):
     for repo in iter_repos(c):
-        execute(c, "git push", repo)
+        with c.cd(repo):
+            result = c.run("git push", hide=True, warn=True)
+        if "Everything up-to-date" in result.stderr:
+            continue
+
+        banner(c, repo)
+        print_result(result)
 
 
 @task
 def status(c: Connection):
     for repo in iter_repos(c):
         with c.cd(repo):
-            res = c.run("git status --porcelain", hide=True, warn=True)
+            result = c.run("git status --porcelain", hide=True, warn=True)
 
-        if res.stderr or res.stdout:
+        if result.stderr or result.stdout:
             banner(c, repo)
-        if res.stderr:
-            print(res.stderr)
-        if res.stdout:
-            print(res.stdout)
+        print_result(result)
