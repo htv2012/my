@@ -2,8 +2,8 @@
 " Appearance
 " ======================================================================
 if has('gui_running')
-    colorscheme desert
-    set lines=999 columns=999
+    colorscheme catppuccin
+    set guifont=Inconsolata\ for\ Powerline:h16
 elseif has('mac')
     colorscheme gruvbox
     set background=dark
