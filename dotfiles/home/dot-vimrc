@@ -1,10 +1,7 @@
 " ======================================================================
 " Appearance
 " ======================================================================
-if has('gui_running')
-    colorscheme catppuccin
-    set guifont=Inconsolata\ for\ Powerline:h16
-elseif has('mac')
+if has('mac')
     colorscheme gruvbox
     set background=dark
 elseif has('unix')
