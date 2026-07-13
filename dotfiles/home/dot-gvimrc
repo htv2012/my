@@ -1,4 +1,6 @@
 colorscheme snazzy
+set autoread
+
 if has("macunix")
     set guifont=Inconsolata\ for\ Powerline:h16
 else

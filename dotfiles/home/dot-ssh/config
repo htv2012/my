@@ -13,3 +13,6 @@ Host nuc
     User haiv
     SetEnv TERM=xterm-256color
 
+Host macbookair
+    SetEnv TERM=xterm-256color
+
