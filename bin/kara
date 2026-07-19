@@ -6,7 +6,7 @@ import fileinput
 def create_markdown(terms: list[str]) -> str:
     terms = [term.title() for term in terms]
     url = f"https://www.youtube.com/results?search_query={'+'.join(terms)}+Karaoke"
-    md = f"[{' '.join(terms)}]({url})"
+    md = f"- [{' '.join(terms)}]({url})"
     return md
 
 
