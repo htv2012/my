@@ -16,3 +16,5 @@ tig
 saved-breakpoints-*
 internal-cmdline-history.txt
 
+# vim
+*.swp

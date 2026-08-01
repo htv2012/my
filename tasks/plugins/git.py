@@ -7,8 +7,10 @@ from tools import banner
 
 
 def iter_repos(c: Connection):
-    repos = []
-    for d in ["~", "~/Projects"]:
+    my_dir = pathlib.Path("~/my").expanduser()
+    repos = [my_dir]
+
+    for d in ["~/Projects"]:
         result = c.run(
             f"find {d} -mindepth 2 -maxdepth 2 -type d -name .git", hide=True, warn=True
         )
