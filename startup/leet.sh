@@ -1,6 +1,6 @@
 #!/bin/sh
-cpsolution() {
-    grep -E -v 'from (nary_tree|tree|list_node) import' solution.py | xsel -b
+create-leet() {
+    leet "$@" && source /tmp/leetdir
 }
 
 cdleet() {
