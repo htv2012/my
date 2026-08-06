@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -d "$HOME/Projects/jupyter" ]
+then
+    cd "$HOME/Projects/jupyter"
+    make lab
+fi
+
