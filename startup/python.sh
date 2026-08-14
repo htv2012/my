@@ -21,11 +21,16 @@ create-project() {
     projectDir="${*: -1}"
     echo "projectDir=$projectDir"
     cd "$projectDir" || exit
+
+
     copier copy \
         -d script=main.py \
-        -d default_target=run \
+        -d default_target=test \
         ~/my/copier-templates/uv-package-makefile .
-    uv add --dev ruff pytest ipython
+
+    uv add --dev ruff pytest ipython pudb
+    touch test_it.py
+    add_pytest_logging.py
 }
 
 
