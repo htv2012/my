@@ -1,24 +1,4 @@
 #!/usr/bin/env bash
 
-start_tmux() {
-    rm /tmp/start-tmux
-    if [[ $LC_TERMINAL = "iTerm2" ]]
-    then
-        tmux -CC attach || tmux -CC
-    else
-        zellij attach || zellij
-    fi
-}
+zellij attach || zellij
 
-# ======================================================================
-# main
-# ======================================================================
-host=$(hostname)
-if [ "$host" = "debian1" ]
-then
-    start_tmux
-else
-    remote=${1:-debian1}
-    ssh $remote "touch /tmp/start-tmux"
-    ssh $remote -L9001:localhost:8001
-fi
