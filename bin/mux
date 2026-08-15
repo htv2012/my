@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
 
-zellij attach || zellij
+# ======================================================================
+# Start a zellij session
+# ======================================================================
+if [ -n "$ZELLIJ_SESSION_NAME" ]
+then
+    echo Already inside session $ZELLIJ_SESSION_NAME
+else
+    zellij attach || zellij
+fi
+
 
