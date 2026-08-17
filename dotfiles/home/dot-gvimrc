@@ -4,5 +4,7 @@ set autoread
 if has("macunix")
     set guifont=Inconsolata\ for\ Powerline:h16
 else
-    set guifont=Inconsolata\ for\ Powerline\ Medium\ 14
+    set guifont=Inconsolata\ for\ Powerline\ Medium\ 12
+    set guifont=Liberation\ Mono\ 12
+    set guifont=Noto\ Mono\ 10
 endif
