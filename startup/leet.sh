@@ -1,10 +1,10 @@
 #!/bin/sh
-create-leet() {
+leet-create() {
     leet "$@" && source /tmp/leetdir
 }
 
-cdleet() {
+leet-cd() {
     builtin cd leetcode || return
-    cd *"$1"* 2> /dev/null || return
+    cd "$(ls -d leetcode_*|fzf)"
 }
 

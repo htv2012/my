@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+import pathlib
+import subprocess
+
+
+def main():
+    root = pathlib.Path("~/Projects/interview-questions/leetcode").expanduser()
+    assert root.is_dir()
+
+    nums = sorted(
+        [
+            int(path.name.split("_")[1])
+            for path in root.glob("leetcode_*")
+            if path.is_dir()
+        ]
+    )
+
+    nums_str = "\n".join(str(num) for num in nums)
+    subprocess.run(
+        ["column"], input=nums_str, text=True, stderr=subprocess.PIPE, check=False
+    )
+
+
+if __name__ == "__main__":
+    main()
