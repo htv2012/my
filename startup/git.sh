@@ -85,6 +85,12 @@ work_in_progress() {
     fi
 }
 
+gbd(){
+    local branch
+    branch=$(git branch --list | awk '!/(main|master|\*)/ { print $1 }' | fzf)
+    git branch -D "$branch"
+}
+
 #
 # Aliases
 # (sorted alphabetically)
@@ -99,7 +105,7 @@ alias gap='git apply'
 
 alias gb='git branch'
 alias gba='git branch -a'
-alias gbd='git branch -d'
+#alias gbd='git branch -d'
 alias gbda='git branch --no-color --merged | command grep -vE "^(\*|\s*(master|develop|dev)\s*$)" | command xargs -n 1 git branch -d'
 alias gbD='git branch -D'
 alias gbl='git blame -b -w'
