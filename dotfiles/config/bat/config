@@ -27,4 +27,4 @@
 
 --style=plain
 --map-syntax='*.exp:Tcl'
-
+--map-syntax='*.zim:Ini'
