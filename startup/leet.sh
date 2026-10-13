@@ -1,9 +1,9 @@
 #!/bin/sh
-leet-create() {
+lcnew() {
     leet "$@" && source /tmp/leetdir
 }
 
-leet-cd() {
+lccd() {
     builtin cd leetcode || return
     cd "$(ls -d leetcode_*|fzf)"
 }

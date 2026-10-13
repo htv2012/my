@@ -15,7 +15,7 @@ def main():
         ]
     )
 
-    nums_str = "\n".join(str(num) for num in nums)
+    nums_str = "\n".join(f"{num:>5}" for num in nums)
     subprocess.run(
         ["column"], input=nums_str, text=True, stderr=subprocess.PIPE, check=False
     )
