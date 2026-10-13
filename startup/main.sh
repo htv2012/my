@@ -17,9 +17,6 @@ then
 elif is_linux
 then
     alias open=xdg-open
-    alias pbcopy='xsel -b'
-    alias pbpaste='xsel -b'
-
     if cmd_found ncal
     then
         alias cal='ncal -b'
