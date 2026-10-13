@@ -10,7 +10,7 @@ fi
 #
 # host-specific config
 #
-if [ "$HOST" = "nuc" ]
+if [ "$HOST" = "nuc" ] && [ -z "$ZELLIJ_SESSION_NAME" ]
 then
     echo ""
     echo ""
