@@ -17,7 +17,7 @@
 | Select up                    | prefix up arrow      |
 | Split into top and bottom    | prefix "             |
 | Split side by side           | prefix %             |
-| Zoon a pane                  | prefix z             |
+| Zoom a pane                  | prefix z             |
 
 
 
