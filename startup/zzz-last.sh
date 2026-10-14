@@ -10,13 +10,17 @@ fi
 #
 # host-specific config
 #
-if [ "$HOST" = "nuc" ] && [ -z "$ZELLIJ_SESSION_NAME" ]
+if [ "$HOST" = "nuc" ]
 then
-    echo ""
-    echo ""
-    echo "============================================================"
-    echo "You are connecting to a NUC box"
-    echo "Type mux to restore last zelij session"
-    echo "============================================================"
-    echo ""
+    if ! ( [ -n "$ZELLIJ_SESSION_NAME" ] || [ -n "$TMUX" ] )
+    then
+        echo ""
+        echo ""
+        echo "============================================================"
+        echo "You are connecting to a NUC box"
+        echo "Type mux to restore last zelij session"
+        echo "or type tmux attach to restore a tmux session"
+        echo "============================================================"
+        echo ""
+    fi
 fi
