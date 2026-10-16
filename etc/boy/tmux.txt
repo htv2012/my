@@ -1,0 +1,83 @@
+tmux Cheat Sheet — tmux.app (default bindings, tmux 3.7)
+==========================================================
+Prefix: Ctrl+b (press and release, then the shortcut key)
+
+SESSIONS
+  tmux                  New session
+  tmux new -s name      New named session
+  tmux ls               List sessions
+  tmux a                Attach to last session
+  tmux a -t name        Attach to named session
+  Prefix d              Detach
+  Prefix D              Choose a client to detach
+  Prefix ( / )          Previous / next session
+  Prefix L              Last session
+  Prefix $              Rename session
+  Prefix s              Session list (interactive)
+  tmux kill-session -t name   Kill session
+  tmux kill-server      Kill all sessions
+
+WINDOWS
+  Prefix c              Create window
+  Prefix ,              Rename window
+  Prefix n / p          Next / previous window
+  Prefix l              Last window
+  Prefix 0-9            Select by number
+  Prefix '              Select by index (prompt)
+  Prefix w              Window list
+  Prefix f              Find window
+  Prefix &              Kill window
+  Prefix .              Move window
+
+PANES
+  Prefix %              Split left / right
+  Prefix "              Split top / bottom
+  Prefix arrows         Navigate panes
+  Prefix o              Next pane
+  Prefix ;              Last active pane
+  Prefix q              Show pane numbers (press a number to jump)
+  Prefix z              Toggle zoom
+  Prefix x              Kill pane
+  Prefix } / {          Swap pane forward / backward
+  Prefix !              Break pane to window
+  Prefix Ctrl+arrows    Resize by 1 (repeatable)
+  Prefix Alt+arrows     Resize by 5 (repeatable)
+  Prefix Space          Cycle layouts
+  Prefix Alt+1..7       Preset layouts
+  Prefix E              Spread panes evenly
+  Prefix m              Mark pane
+  Prefix *              New floating pane (tmux 3.7+)
+
+COPY MODE (vi keys: set -g mode-keys vi)
+  Prefix [              Enter copy mode
+  Prefix PgUp           Enter copy mode and scroll up
+  PgUp / PgDn           Scroll
+  h j k l               Move
+  0 / $                 Line start / end
+  g / G                 Top / bottom of history
+  / and ?               Search down / up
+  n / N                 Next / previous match
+  Space                 Start selection
+  v / V                 Rectangle toggle / select line
+  Enter                 Copy selection and exit
+  Esc / q               Clear selection / exit
+  Prefix ]              Paste most recent buffer
+  Prefix =              Choose buffer to paste
+  Prefix #              List buffers
+
+COMMAND MODE & HELP
+  Prefix :              Command prompt
+  Prefix ?              List key bindings
+  Prefix /              Describe one key
+  Prefix C              Customize options and keys
+  Prefix ~              Message log
+  Prefix : source-file ~/.tmux.conf   Reload config
+
+MISC
+  Prefix t              Clock
+  Prefix r              Redraw client
+  Prefix Ctrl+z         Suspend client
+  tmux -V               Version
+  tmux info             Server and terminal info
+
+Source: https://tmux.app/cheat-sheet/
