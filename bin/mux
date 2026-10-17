@@ -5,7 +5,7 @@
 # ======================================================================
 if [ -n "$ZELLIJ_SESSION_NAME" ]
 then
-    echo Already inside session $ZELLIJ_SESSION_NAME
+    echo "One should not run this command inside a Zellij session"
 else
     zellij attach || zellij
 fi
