@@ -1,17 +1,11 @@
+Host *
+    SetEnv TERM=xterm-256color
+    User haiv
+
 Host pi
     HostName 192.168.1.200
     User pi
-    SetEnv TERM=xterm-256color
 
 Host truenas
     HostName truenas.local
-    User haiv
-    SetEnv TERM=xterm-256color
-
-Host nuc
-    HostName nuc
-    User haiv
-
-Host macbookair
-    SetEnv TERM=xterm-256color
 
