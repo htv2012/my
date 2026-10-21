@@ -7,8 +7,7 @@ from tools import banner
 
 
 def iter_repos(c: Connection):
-    home_dir = c.run("echo $HOME").stdout.strip()
-    print(f"{home_dir = }")
+    home_dir = c.run("echo $HOME", hide=True).stdout.strip()
     my_dir = f"{home_dir}/my"
     repos = [my_dir]
 
