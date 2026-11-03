@@ -1,6 +1,14 @@
+#!/usr/bin/env zsh
+
 # Fix for issue https://gnunn1.github.io/tilix-web/manual/vteconfig/
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-    . $(ls -1 /etc/profile.d/vte*.sh | sort | tail -n1)
+
+    files=(/etc/profile.d/vte*.sh(N))
+    if (( ${#files} ))
+    then
+      source "${files[-1]}"
+    fi
+
 fi
 
