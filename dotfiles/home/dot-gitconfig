@@ -1,26 +1,9 @@
-[color]
-    ui = auto
-
-[delta]
-    line-numbers = true
-    navigate = true    # use n and N to move between diff sections
-    side-by-side = false
-
-[diff]
-    colorMoved = default
-
-[init]
-    defaultBranch = main
-
-[merge]
-    conflictstyle = diff3
-
-[pull]
-	rebase = true
-
-[push]
-    default = simple
-
+[core]
+pager = delta
 [user]
-	email = haivu2004@gmail.com
-	name = Hai Vu
+email = haivu2004@gmail.com
+name = Hai Vu
+[init]
+defaultBranch = main
+[pull]
+rebase = true
