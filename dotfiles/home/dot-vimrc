@@ -4,11 +4,12 @@
 if has('mac')
     colorscheme gruvbox
     set background=dark
-elseif has('unix')
+elseif has('linux')
     colorscheme snazzy
     set background=dark
-else
-    colorscheme pablo
+elseif has('bsd')
+    colorscheme molokai
+    set background=dark
 endif
 
 " ======================================================================
