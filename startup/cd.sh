@@ -55,7 +55,7 @@ cd() {
     then
         z "$@" || builtin cd "$@" || return
     else
-        builtin cd "$@" || builtin cd "$@" || return
+        builtin cd "$@" || return
     fi
 
     if cmd_found eza
